@@ -122,29 +122,69 @@ nav{justify-content:center}
 
         <div class="form-grid">
           <div>
-            <label for="numeroSocio">Número de socio</label>
-            <input id="numeroSocio" type="number" min="1" step="1" required>
-          </div>
-          <div>
-            <label for="nombreSocio">Nombre</label>
-            <input id="nombreSocio" type="text" required>
-          </div>
-          <div>
-            <label for="apellidosSocio">Apellidos</label>
-            <input id="apellidosSocio" type="text" required>
-          </div>
-          <div>
-            <label for="emailSocio">Correo electrónico</label>
-            <input id="emailSocio" type="email">
-          </div>
-          <div>
-            <label for="telefonoSocio">Teléfono</label>
-            <input id="telefonoSocio" type="tel">
-          </div>
-          <div>
-            <label for="fechaAlta">Fecha de alta</label>
-            <input id="fechaAlta" type="date" required>
-          </div>
+  <label for="telefonoSocio">Teléfono</label>
+  <input id="telefonoSocio" type="tel">
+</div>
+
+<div>
+  <label for="dniSocio">DNI</label>
+  <input id="dniSocio" type="text">
+</div>
+
+<div class="full">
+  <label for="direccionSocio">Dirección</label>
+  <input id="direccionSocio" type="text">
+</div>
+
+<div>
+  <label for="codigoPostal">Código postal</label>
+  <input id="codigoPostal" type="text">
+</div>
+
+<div>
+  <label for="localidadSocio">Localidad</label>
+  <input id="localidadSocio" type="text">
+</div>
+
+<div>
+  <label for="fechaNacimiento">Fecha de nacimiento</label>
+  <input id="fechaNacimiento" type="date">
+</div>
+
+<div>
+  <label for="cuotaSocio">Cuota (€)</label>
+  <input id="cuotaSocio" type="number" min="0" step="0.01">
+</div>
+
+<div>
+  <label for="periodicidadCuota">Periodicidad</label>
+  <select id="periodicidadCuota">
+    <option value="mensual">Mensual</option>
+    <option value="anual">Anual</option>
+  </select>
+</div>
+
+<div>
+  <label for="formaPago">Forma de pago</label>
+  <select id="formaPago">
+    <option value="">Seleccionar</option>
+    <option value="transferencia">Transferencia</option>
+    <option value="domiciliacion">Domiciliación</option>
+    <option value="efectivo">Efectivo</option>
+    <option value="otro">Otro</option>
+  </select>
+</div>
+
+<div class="full">
+  <label for="observacionesSocio">Observaciones</label>
+  <textarea id="observacionesSocio" rows="3"
+    style="width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px"></textarea>
+</div>
+
+<div>
+  <label for="fechaAlta">Fecha de alta</label>
+  <input id="fechaAlta" type="date" required>
+</div>
           <div class="full">
             <label for="estadoSocio">Estado</label>
             <select id="estadoSocio" style="width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px">
