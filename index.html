@@ -48,7 +48,10 @@ th,td{padding:10px;border-bottom:1px solid #e2d5c8;text-align:left}
 th{background:#f6f0eb;color:#5b1022}
 td button{padding:6px 10px;margin:3px;border:0;border-radius:4px;color:white;background:#5b1022;cursor:pointer}
 td button.delete{background:#8d2525}
+td button.secondary{background:#75635d}
 .badge{display:inline-block;background:#f0e9e3;padding:4px 9px;border-radius:20px;font-size:12px}
+.badge.admin{background:#f2e4bd;color:#674900}
+.badge.inactive{background:#f5dddd;color:#8d2525}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:20px 0}
 .stat{padding:20px;background:#f6f0eb;border:1px solid #e2d5c8;border-radius:7px;text-align:center}
 .stat strong{display:block;color:#5b1022;font-size:25px}
@@ -319,6 +322,57 @@ nav{justify-content:center}
         </table>
       </div>
       <p id="totalPagos" class="message"></p>
+
+      <hr>
+
+      <!-- GESTIÓN DE USUARIOS -->
+      <h3>Gestión de usuarios</h3>
+      <p style="text-align:center">
+        Administra las cuentas autorizadas para acceder a la zona privada.
+      </p>
+
+      <form id="userForm">
+        <h3 style="text-align:left;margin-top:20px">Añadir perfil de usuario</h3>
+
+        <label for="userUid">UID de Firebase Authentication</label>
+        <input id="userUid" type="text" required placeholder="Pega aquí el UID">
+
+        <label for="userEmail">Correo electrónico</label>
+        <input id="userEmail" type="email" required>
+
+        <label for="userName">Nombre</label>
+        <input id="userName" type="text" required>
+
+        <label for="userRole">Permisos</label>
+        <select id="userRole">
+          <option value="socio">Socio</option>
+          <option value="admin">Administrador</option>
+        </select>
+
+        <button class="button" type="submit" id="saveUserButton">
+          Crear perfil de usuario
+        </button>
+      </form>
+
+      <p id="userMessage" class="message" role="status"></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usersTable">
+            <tr><td colspan="5">Cargando usuarios...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
 
     <div id="memberInfo">
@@ -343,7 +397,7 @@ import {
 
 import {
   getFirestore, doc, getDoc, collection, getDocs,
-  addDoc, updateDoc, deleteDoc
+  addDoc, updateDoc, deleteDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -371,6 +425,7 @@ const loginButton = document.getElementById("loginButton");
 
 let sociosCache = [];
 let pagosCache = [];
+let usuariosCache = [];
 let esAdministrador = false;
 
 function fechaHoy() {
@@ -435,7 +490,7 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
   showLogin("Has cerrado la sesión correctamente.");
 });
 
-/* GESTIÓN DE SOCIOS */
+/* FUNCIONES GENERALES */
 
 const socioForm = document.getElementById("socioForm");
 const socioMessage = document.getElementById("socioMessage");
@@ -450,18 +505,6 @@ function ponerValor(id, dato) {
   document.getElementById(id).value = dato ?? "";
 }
 
-function limpiarFormulario() {
-  socioForm.reset();
-  ponerValor("socioId", "");
-  ponerValor("fechaAlta", fechaHoy());
-  ponerValor("periodicidadCuota", "mensual");
-  ponerValor("estadoSocio", "activo");
-  saveSocioButton.textContent = "Guardar socio";
-  socioMessage.textContent = "";
-}
-
-document.getElementById("cancelEditButton").addEventListener("click", limpiarFormulario);
-
 function escapar(texto) {
   return String(texto ?? "").replace(/[&<>"']/g, letra => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -473,6 +516,20 @@ function formatoDinero(numero) {
     style:"currency",currency:"EUR"
   });
 }
+
+/* GESTIÓN DE SOCIOS */
+
+function limpiarFormulario() {
+  socioForm.reset();
+  ponerValor("socioId", "");
+  ponerValor("fechaAlta", fechaHoy());
+  ponerValor("periodicidadCuota", "mensual");
+  ponerValor("estadoSocio", "activo");
+  saveSocioButton.textContent = "Guardar socio";
+  socioMessage.textContent = "";
+}
+
+document.getElementById("cancelEditButton").addEventListener("click", limpiarFormulario);
 
 async function cargarSocios() {
   if (!esAdministrador) return;
@@ -666,7 +723,7 @@ async function cargarPagos() {
     mostrarPagos();
   } catch (error) {
     console.error(error);
-    pagosTable.innerHTML = '<tr><td colspan="7">No se han podido cargar los pagos. Revisa las reglas de Firestore.</td></tr>';
+    pagosTable.innerHTML = '<tr><td colspan="7">No se han podido cargar los pagos.</td></tr>';
     pagoMessage.textContent = "La colección pagos necesita permisos de lectura.";
   }
 }
@@ -703,7 +760,6 @@ function mostrarPagos() {
 }
 
 document.getElementById("buscarPagos").addEventListener("input",mostrarPagos);
-
 document.getElementById("fechaPago").value = fechaHoy();
 
 pagoForm.addEventListener("submit",async event => {
@@ -753,7 +809,7 @@ pagoForm.addEventListener("submit",async event => {
     await cargarPagos();
   } catch (error) {
     console.error(error);
-    pagoMessage.textContent = "No se ha podido registrar el pago. Comprueba las reglas de Firestore.";
+    pagoMessage.textContent = "No se ha podido registrar el pago.";
   } finally {
     savePagoButton.disabled = false;
   }
@@ -779,17 +835,250 @@ pagosTable.addEventListener("click",async event => {
   }
 });
 
+/* GESTIÓN DE USUARIOS */
+
+const userForm = document.getElementById("userForm");
+const userMessage = document.getElementById("userMessage");
+const usersTable = document.getElementById("usersTable");
+const saveUserButton = document.getElementById("saveUserButton");
+
+async function cargarUsuarios() {
+  if (!esAdministrador) return;
+
+  usersTable.innerHTML = '<tr><td colspan="5">Cargando usuarios...</td></tr>';
+
+  try {
+    const resultado = await getDocs(collection(db,"users"));
+
+    usuariosCache = resultado.docs.map(documento => ({
+      id:documento.id,
+      ...documento.data()
+    }));
+
+    usuariosCache.sort((a,b) =>
+      String(a.nombre || "").localeCompare(String(b.nombre || ""), "es")
+    );
+
+    mostrarUsuarios();
+
+  } catch (error) {
+    console.error(error);
+    usersTable.innerHTML = '<tr><td colspan="5">No se han podido cargar los usuarios.</td></tr>';
+    userMessage.textContent = "Comprueba las reglas de acceso de Firestore.";
+  }
+}
+
+function mostrarUsuarios() {
+  usersTable.innerHTML = "";
+
+  if (!usuariosCache.length) {
+    usersTable.innerHTML = '<tr><td colspan="5">No hay usuarios registrados.</td></tr>';
+    return;
+  }
+
+  usuariosCache.forEach(usuario => {
+    const esActivo = usuario.activo === true;
+    const esAdmin = usuario.rol === "admin";
+    const esMiCuenta = auth.currentUser && usuario.id === auth.currentUser.uid;
+
+    const fila = document.createElement("tr");
+
+    fila.innerHTML = `
+      <td>${escapar(usuario.nombre || "Sin nombre")}${esMiCuenta ? " (Tú)" : ""}</td>
+      <td>${escapar(usuario.email || "")}</td>
+      <td>
+        <span class="badge ${esAdmin ? "admin" : ""}">
+          ${esAdmin ? "Administrador" : "Socio"}
+        </span>
+      </td>
+      <td>
+        <span class="badge ${esActivo ? "" : "inactive"}">
+          ${esActivo ? "Activo" : "Inactivo"}
+        </span>
+      </td>
+      <td>
+        <button type="button"
+          data-toggle-role="${escapar(usuario.id)}"
+          ${esMiCuenta ? "disabled title='No puedes cambiar tus propios permisos'" : ""}>
+          ${esAdmin ? "Hacer socio" : "Hacer administrador"}
+        </button>
+
+        <button type="button"
+          class="secondary"
+          data-toggle-active="${escapar(usuario.id)}"
+          ${esMiCuenta ? "disabled title='No puedes desactivar tu propia cuenta'" : ""}>
+          ${esActivo ? "Desactivar" : "Activar"}
+        </button>
+      </td>`;
+
+    usersTable.appendChild(fila);
+  });
+}
+
+userForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!esAdministrador || !auth.currentUser) {
+    userMessage.textContent = "No tienes permisos para gestionar usuarios.";
+    return;
+  }
+
+  const uid = valor("userUid").trim();
+  const email = valor("userEmail").trim();
+  const nombre = valor("userName").trim();
+  const rol = valor("userRole");
+
+  if (!uid || !email || !nombre) {
+    userMessage.textContent = "Completa todos los campos.";
+    return;
+  }
+
+  if (uid === auth.currentUser.uid) {
+    userMessage.textContent = "Este es tu propio UID. Ya tienes un perfil.";
+    return;
+  }
+
+  if (usuariosCache.some(u => u.id === uid)) {
+    userMessage.textContent = "Ya existe un perfil con ese UID.";
+    return;
+  }
+
+  saveUserButton.disabled = true;
+  userMessage.textContent = "Creando perfil...";
+
+  try {
+    await setDoc(doc(db,"users",uid),{
+      email:email,
+      nombre:nombre,
+      rol:rol,
+      activo:true
+    });
+
+    userForm.reset();
+    userMessage.textContent = "Perfil creado correctamente. El usuario ya puede iniciar sesión si su cuenta de Authentication existe.";
+
+    await cargarUsuarios();
+
+  } catch (error) {
+    console.error(error);
+    userMessage.textContent = "No se ha podido crear el perfil. Comprueba el UID y los permisos.";
+  } finally {
+    saveUserButton.disabled = false;
+  }
+});
+
+usersTable.addEventListener("click", async event => {
+  const botonRol = event.target.closest("[data-toggle-role]");
+  const botonActivo = event.target.closest("[data-toggle-active]");
+
+  if (!esAdministrador || !auth.currentUser) {
+    userMessage.textContent = "No tienes permisos para esta operación.";
+    return;
+  }
+
+  if (botonRol) {
+    const usuario = usuariosCache.find(u => u.id === botonRol.dataset.toggleRole);
+    if (!usuario) return;
+
+    if (usuario.id === auth.currentUser.uid) {
+      userMessage.textContent = "No puedes modificar tus propios permisos.";
+      return;
+    }
+
+    const nuevoRol = usuario.rol === "admin" ? "socio" : "admin";
+
+    if (usuario.rol === "admin" && nuevoRol === "socio") {
+      const administradoresActivos = usuariosCache.filter(
+        u => u.rol === "admin" && u.activo === true
+      ).length;
+
+      if (usuario.activo === true && administradoresActivos <= 1) {
+        userMessage.textContent = "No puedes quitar los permisos al último administrador activo.";
+        return;
+      }
+    }
+
+    const accion = nuevoRol === "admin"
+      ? "convertir en administrador"
+      : "cambiar a socio";
+
+    if (!confirm(`¿Quieres ${accion} a ${usuario.nombre || usuario.email}?`))
+      return;
+
+    try {
+      await updateDoc(doc(db,"users",usuario.id),{
+        rol:nuevoRol
+      });
+
+      userMessage.textContent = "Permisos actualizados correctamente.";
+      await cargarUsuarios();
+
+    } catch (error) {
+      console.error(error);
+      userMessage.textContent = "No se han podido modificar los permisos.";
+    }
+  }
+
+  if (botonActivo) {
+    const usuario = usuariosCache.find(u => u.id === botonActivo.dataset.toggleActive);
+    if (!usuario) return;
+
+    if (usuario.id === auth.currentUser.uid) {
+      userMessage.textContent = "No puedes desactivar tu propia cuenta.";
+      return;
+    }
+
+    const nuevoEstado = usuario.activo !== true;
+
+    if (!nuevoEstado && usuario.rol === "admin") {
+      const administradoresActivos = usuariosCache.filter(
+        u => u.rol === "admin" && u.activo === true
+      ).length;
+
+      if (administradoresActivos <= 1) {
+        userMessage.textContent = "No puedes desactivar al último administrador activo.";
+        return;
+      }
+    }
+
+    const accion = nuevoEstado ? "activar" : "desactivar";
+
+    if (!confirm(`¿Quieres ${accion} el acceso de ${usuario.nombre || usuario.email}?`))
+      return;
+
+    try {
+      await updateDoc(doc(db,"users",usuario.id),{
+        activo:nuevoEstado
+      });
+
+      userMessage.textContent = nuevoEstado
+        ? "Usuario activado correctamente."
+        : "Usuario desactivado correctamente.";
+
+      await cargarUsuarios();
+
+    } catch (error) {
+      console.error(error);
+      userMessage.textContent = "No se ha podido cambiar el estado del usuario.";
+    }
+  }
+});
+
 /* COMPROBACIÓN DEL ACCESO */
 
 onAuthStateChanged(auth,async user => {
   if (!user) {
     esAdministrador = false;
+    sociosCache = [];
+    pagosCache = [];
+    usuariosCache = [];
     showLogin();
     return;
   }
 
   try {
     const profileSnap = await getDoc(doc(db,"users",user.uid));
+
     if (!profileSnap.exists() || profileSnap.data().activo !== true) {
       await signOut(auth);
       showLogin("Tu cuenta no está activa o todavía no ha sido autorizada.");
@@ -803,7 +1092,9 @@ onAuthStateChanged(auth,async user => {
       limpiarFormulario();
       await cargarSocios();
       await cargarPagos();
+      await cargarUsuarios();
     }
+
   } catch (error) {
     console.error("Error al consultar el perfil:",error);
     await signOut(auth);
