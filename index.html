@@ -27,10 +27,10 @@ section h2{color:#5b1022;font-size:30px;margin-bottom:18px}
 section p{max-width:750px;margin:auto}
 .gold{color:#a17a32}
 .private{background:#f0e9e3;border-top:1px solid #e2d5c8;border-bottom:1px solid #e2d5c8}
-.panel{max-width:850px;margin:30px auto 0;padding:28px;background:white;border:1px solid #e2d5c8;border-radius:8px;text-align:left;box-shadow:0 5px 20px #0000000c}
+.panel{max-width:950px;margin:30px auto 0;padding:28px;background:white;border:1px solid #e2d5c8;border-radius:8px;text-align:left;box-shadow:0 5px 20px #0000000c}
 .panel h3{text-align:center;color:#5b1022;margin-bottom:18px}
 .panel label{display:block;margin:13px 0 5px}
-.panel input{width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px}
+.panel input,.panel select,.panel textarea{width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px;font-family:Arial,sans-serif;background:white}
 .panel .button{width:100%;text-align:center}
 .link{display:block;text-align:center;margin-top:16px;color:#781c32;cursor:pointer;text-decoration:underline;background:none;border:0;font:inherit}
 .message{margin-top:15px;text-align:center;font-size:14px;overflow-wrap:anywhere}
@@ -120,77 +120,87 @@ nav{justify-content:center}
       <form id="socioForm">
         <input type="hidden" id="socioId">
 
+        <h3 style="text-align:left;margin-top:25px">Datos personales</h3>
         <div class="form-grid">
           <div>
-  <label for="telefonoSocio">Teléfono</label>
-  <input id="telefonoSocio" type="tel">
-</div>
-
-<div>
-  <label for="dniSocio">DNI</label>
-  <input id="dniSocio" type="text">
-</div>
-
-<div class="full">
-  <label for="direccionSocio">Dirección</label>
-  <input id="direccionSocio" type="text">
-</div>
-
-<div>
-  <label for="codigoPostal">Código postal</label>
-  <input id="codigoPostal" type="text">
-</div>
-
-<div>
-  <label for="localidadSocio">Localidad</label>
-  <input id="localidadSocio" type="text">
-</div>
-
-<div>
-  <label for="fechaNacimiento">Fecha de nacimiento</label>
-  <input id="fechaNacimiento" type="date">
-</div>
-
-<div>
-  <label for="cuotaSocio">Cuota (€)</label>
-  <input id="cuotaSocio" type="number" min="0" step="0.01">
-</div>
-
-<div>
-  <label for="periodicidadCuota">Periodicidad</label>
-  <select id="periodicidadCuota">
-    <option value="mensual">Mensual</option>
-    <option value="anual">Anual</option>
-  </select>
-</div>
-
-<div>
-  <label for="formaPago">Forma de pago</label>
-  <select id="formaPago">
-    <option value="">Seleccionar</option>
-    <option value="transferencia">Transferencia</option>
-    <option value="domiciliacion">Domiciliación</option>
-    <option value="efectivo">Efectivo</option>
-    <option value="otro">Otro</option>
-  </select>
-</div>
-
-<div class="full">
-  <label for="observacionesSocio">Observaciones</label>
-  <textarea id="observacionesSocio" rows="3"
-    style="width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px"></textarea>
-</div>
-
-<div>
-  <label for="fechaAlta">Fecha de alta</label>
-  <input id="fechaAlta" type="date" required>
-</div>
+            <label for="numeroSocio">Número de socio</label>
+            <input id="numeroSocio" type="number" min="1" step="1" required>
+          </div>
+          <div>
+            <label for="nombreSocio">Nombre</label>
+            <input id="nombreSocio" type="text" required>
+          </div>
+          <div>
+            <label for="apellidosSocio">Apellidos</label>
+            <input id="apellidosSocio" type="text" required>
+          </div>
+          <div>
+            <label for="dniSocio">DNI</label>
+            <input id="dniSocio" type="text">
+          </div>
+          <div>
+            <label for="emailSocio">Correo electrónico</label>
+            <input id="emailSocio" type="email">
+          </div>
+          <div>
+            <label for="telefonoSocio">Teléfono</label>
+            <input id="telefonoSocio" type="tel">
+          </div>
           <div class="full">
-            <label for="estadoSocio">Estado</label>
-            <select id="estadoSocio" style="width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px">
+            <label for="direccionSocio">Dirección</label>
+            <input id="direccionSocio" type="text">
+          </div>
+          <div>
+            <label for="codigoPostal">Código postal</label>
+            <input id="codigoPostal" type="text">
+          </div>
+          <div>
+            <label for="localidadSocio">Localidad</label>
+            <input id="localidadSocio" type="text">
+          </div>
+          <div>
+            <label for="fechaNacimiento">Fecha de nacimiento</label>
+            <input id="fechaNacimiento" type="date">
+          </div>
+          <div>
+            <label for="fechaAlta">Fecha de alta</label>
+            <input id="fechaAlta" type="date" required>
+          </div>
+        </div>
+
+        <h3 style="text-align:left;margin-top:28px">Cuotas y pagos</h3>
+        <div class="form-grid">
+          <div>
+            <label for="cuotaSocio">Importe de la cuota (€)</label>
+            <input id="cuotaSocio" type="number" min="0" step="0.01">
+          </div>
+          <div>
+            <label for="periodicidadCuota">Periodicidad</label>
+            <select id="periodicidadCuota">
+              <option value="mensual">Mensual</option>
+              <option value="anual">Anual</option>
+            </select>
+          </div>
+          <div>
+            <label for="formaPago">Forma de pago</label>
+            <select id="formaPago">
+              <option value="">Seleccionar</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="domiciliacion">Domiciliación</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="estadoSocio">Estado del socio</label>
+            <select id="estadoSocio">
               <option value="activo">Activo</option>
               <option value="inactivo">Inactivo</option>
             </select>
+          </div>
+          <div class="full">
+            <label for="observacionesSocio">Observaciones</label>
+            <textarea id="observacionesSocio" rows="4"></textarea>
           </div>
         </div>
 
@@ -204,7 +214,7 @@ nav{justify-content:center}
 
       <div class="search">
         <label for="searchSocios">Buscar socio</label>
-        <input id="searchSocios" type="search" placeholder="Nombre, apellidos o número...">
+        <input id="searchSocios" type="search" placeholder="Nombre, apellidos, DNI o número...">
       </div>
 
       <div class="table-wrap">
@@ -214,12 +224,13 @@ nav{justify-content:center}
               <th>N.º</th>
               <th>Socio</th>
               <th>Contacto</th>
+              <th>Cuota</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody id="sociosTable">
-            <tr><td colspan="5">Cargando socios...</td></tr>
+            <tr><td colspan="6">Cargando socios...</td></tr>
           </tbody>
         </table>
       </div>
@@ -240,13 +251,24 @@ nav{justify-content:center}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
 import {
-  getAuth, signInWithEmailAndPassword, sendPasswordResetEmail,
-  signOut, onAuthStateChanged
+  getAuth,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
 import {
-  getFirestore, doc, getDoc, collection, getDocs,
-  addDoc, updateDoc, deleteDoc
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -297,7 +319,7 @@ function showMember(profile) {
   memberInfo.classList.toggle("hidden", esAdministrador);
 }
 
-loginForm.addEventListener("submit", async (event) => {
+loginForm.addEventListener("submit", async event => {
   event.preventDefault();
   loginButton.disabled = true;
   loginMessage.textContent = "Comprobando acceso...";
@@ -309,6 +331,7 @@ loginForm.addEventListener("submit", async (event) => {
       document.getElementById("password").value
     );
   } catch (error) {
+    console.error(error);
     loginMessage.textContent =
       "No se ha podido iniciar sesión. Comprueba el correo y la contraseña.";
   } finally {
@@ -329,6 +352,7 @@ document.getElementById("forgotButton").addEventListener("click", async () => {
     loginMessage.textContent =
       "Si la cuenta existe, recibirás un correo para restablecer la contraseña.";
   } catch (error) {
+    console.error(error);
     loginMessage.textContent =
       "No se ha podido enviar el correo. Comprueba la dirección.";
   }
@@ -340,18 +364,27 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
   showLogin("Has cerrado la sesión correctamente.");
 });
 
-/* Gestión de socios */
+/* FUNCIONES DE GESTIÓN DE SOCIOS */
 
 const socioForm = document.getElementById("socioForm");
 const socioMessage = document.getElementById("socioMessage");
 const sociosTable = document.getElementById("sociosTable");
 const saveSocioButton = document.getElementById("saveSocioButton");
 
+function valor(id) {
+  return document.getElementById(id).value;
+}
+
+function ponerValor(id, dato) {
+  document.getElementById(id).value = dato ?? "";
+}
+
 function limpiarFormulario() {
   socioForm.reset();
-  document.getElementById("socioId").value = "";
-  document.getElementById("fechaAlta").value =
-    new Date().toISOString().slice(0,10);
+  ponerValor("socioId", "");
+  ponerValor("fechaAlta", new Date().toISOString().slice(0,10));
+  ponerValor("periodicidadCuota", "mensual");
+  ponerValor("estadoSocio", "activo");
   saveSocioButton.textContent = "Guardar socio";
   socioMessage.textContent = "";
 }
@@ -372,7 +405,7 @@ async function cargarSocios() {
   if (!esAdministrador) return;
 
   sociosTable.innerHTML =
-    '<tr><td colspan="5">Cargando socios...</td></tr>';
+    '<tr><td colspan="6">Cargando socios...</td></tr>';
 
   try {
     const resultado = await getDocs(collection(db, "socios"));
@@ -382,26 +415,31 @@ async function cargarSocios() {
       ...documento.data()
     }));
 
-    sociosCache.sort((a,b) => Number(a.numeroSocio || 0) - Number(b.numeroSocio || 0));
+    sociosCache.sort((a,b) =>
+      Number(a.numeroSocio || 0) - Number(b.numeroSocio || 0)
+    );
 
     mostrarSocios();
   } catch (error) {
     console.error(error);
     sociosTable.innerHTML =
-      '<tr><td colspan="5">No se han podido cargar los socios.</td></tr>';
+      '<tr><td colspan="6">No se han podido cargar los socios.</td></tr>';
     socioMessage.textContent =
       "Comprueba los permisos de Firestore y vuelve a intentarlo.";
   }
 }
 
 function mostrarSocios() {
-  const busqueda = document.getElementById("searchSocios").value
-    .trim().toLowerCase();
+  const busqueda = valor("searchSocios").trim().toLowerCase();
 
   const filtrados = sociosCache.filter(socio => {
     const texto = [
-      socio.numeroSocio, socio.nombre, socio.apellidos,
-      socio.email, socio.telefono
+      socio.numeroSocio,
+      socio.nombre,
+      socio.apellidos,
+      socio.dni,
+      socio.email,
+      socio.telefono
     ].join(" ").toLowerCase();
 
     return texto.includes(busqueda);
@@ -411,15 +449,20 @@ function mostrarSocios() {
 
   if (!filtrados.length) {
     sociosTable.innerHTML =
-      '<tr><td colspan="5">No hay socios que mostrar.</td></tr>';
+      '<tr><td colspan="6">No hay socios que mostrar.</td></tr>';
   } else {
     filtrados.forEach(socio => {
       const fila = document.createElement("tr");
+
+      const cuota = socio.cuota !== undefined
+        ? Number(socio.cuota).toFixed(2) + " €"
+        : "—";
 
       fila.innerHTML = `
         <td>${escapar(socio.numeroSocio)}</td>
         <td>${escapar(socio.nombre)} ${escapar(socio.apellidos)}</td>
         <td>${escapar(socio.email || "")}<br>${escapar(socio.telefono || "")}</td>
+        <td>${escapar(cuota)}</td>
         <td><span class="badge">${escapar(socio.estado || "activo")}</span></td>
         <td>
           <button type="button" data-edit="${escapar(socio.id)}">Editar</button>
@@ -448,21 +491,34 @@ socioForm.addEventListener("submit", async event => {
   saveSocioButton.disabled = true;
   socioMessage.textContent = "Guardando socio...";
 
-  const id = document.getElementById("socioId").value;
+  const id = valor("socioId");
 
   const datos = {
-    numeroSocio: Number(document.getElementById("numeroSocio").value),
-    nombre: document.getElementById("nombreSocio").value.trim(),
-    apellidos: document.getElementById("apellidosSocio").value.trim(),
-    email: document.getElementById("emailSocio").value.trim(),
-    telefono: document.getElementById("telefonoSocio").value.trim(),
-    fechaAlta: document.getElementById("fechaAlta").value,
-    estado: document.getElementById("estadoSocio").value
+    numeroSocio: Number(valor("numeroSocio")),
+    nombre: valor("nombreSocio").trim(),
+    apellidos: valor("apellidosSocio").trim(),
+    dni: valor("dniSocio").trim(),
+    email: valor("emailSocio").trim(),
+    telefono: valor("telefonoSocio").trim(),
+    direccion: valor("direccionSocio").trim(),
+    codigoPostal: valor("codigoPostal").trim(),
+    localidad: valor("localidadSocio").trim(),
+    fechaNacimiento: valor("fechaNacimiento"),
+    fechaAlta: valor("fechaAlta"),
+    cuota: Number(valor("cuotaSocio") || 0),
+    periodicidadCuota: valor("periodicidadCuota"),
+    formaPago: valor("formaPago"),
+    observaciones: valor("observacionesSocio").trim(),
+    estado: valor("estadoSocio")
   };
 
   try {
     if (!Number.isInteger(datos.numeroSocio) || datos.numeroSocio < 1) {
       throw new Error("El número de socio debe ser un entero positivo.");
+    }
+
+    if (!datos.nombre || !datos.apellidos || !datos.fechaAlta) {
+      throw new Error("Completa el nombre, los apellidos y la fecha de alta.");
     }
 
     const duplicado = sociosCache.some(s =>
@@ -483,10 +539,11 @@ socioForm.addEventListener("submit", async event => {
 
     limpiarFormulario();
     await cargarSocios();
+
   } catch (error) {
     console.error(error);
-    socioMessage.textContent = error.message ||
-      "No se ha podido guardar el socio.";
+    socioMessage.textContent =
+      error.message || "No se ha podido guardar el socio.";
   } finally {
     saveSocioButton.disabled = false;
   }
@@ -503,17 +560,28 @@ sociosTable.addEventListener("click", async event => {
 
     if (!socio) return;
 
-    document.getElementById("socioId").value = socio.id;
-    document.getElementById("numeroSocio").value = socio.numeroSocio ?? "";
-    document.getElementById("nombreSocio").value = socio.nombre ?? "";
-    document.getElementById("apellidosSocio").value = socio.apellidos ?? "";
-    document.getElementById("emailSocio").value = socio.email ?? "";
-    document.getElementById("telefonoSocio").value = socio.telefono ?? "";
-    document.getElementById("fechaAlta").value = socio.fechaAlta ?? "";
-    document.getElementById("estadoSocio").value = socio.estado ?? "activo";
+    ponerValor("socioId", socio.id);
+    ponerValor("numeroSocio", socio.numeroSocio);
+    ponerValor("nombreSocio", socio.nombre);
+    ponerValor("apellidosSocio", socio.apellidos);
+    ponerValor("dniSocio", socio.dni);
+    ponerValor("emailSocio", socio.email);
+    ponerValor("telefonoSocio", socio.telefono);
+    ponerValor("direccionSocio", socio.direccion);
+    ponerValor("codigoPostal", socio.codigoPostal);
+    ponerValor("localidadSocio", socio.localidad);
+    ponerValor("fechaNacimiento", socio.fechaNacimiento);
+    ponerValor("fechaAlta", socio.fechaAlta);
+    ponerValor("cuotaSocio", socio.cuota);
+    ponerValor("periodicidadCuota", socio.periodicidadCuota || "mensual");
+    ponerValor("formaPago", socio.formaPago);
+    ponerValor("observacionesSocio", socio.observaciones);
+    ponerValor("estadoSocio", socio.estado || "activo");
 
     saveSocioButton.textContent = "Actualizar socio";
-    socioMessage.textContent = "Editando socio número " + socio.numeroSocio;
+    socioMessage.textContent =
+      "Editando socio número " + socio.numeroSocio;
+
     socioForm.scrollIntoView({behavior:"smooth",block:"start"});
   }
 
@@ -533,6 +601,7 @@ sociosTable.addEventListener("click", async event => {
     try {
       await deleteDoc(doc(db, "socios", socio.id));
       socioMessage.textContent = "Socio eliminado correctamente.";
+      limpiarFormulario();
       await cargarSocios();
     } catch (error) {
       console.error(error);
@@ -540,6 +609,8 @@ sociosTable.addEventListener("click", async event => {
     }
   }
 });
+
+/* COMPROBACIÓN DEL ACCESO Y DEL PERFIL */
 
 onAuthStateChanged(auth, async user => {
   if (!user) {
@@ -564,6 +635,7 @@ onAuthStateChanged(auth, async user => {
       limpiarFormulario();
       await cargarSocios();
     }
+
   } catch (error) {
     console.error("Error al consultar el perfil:", error);
     await signOut(auth);
