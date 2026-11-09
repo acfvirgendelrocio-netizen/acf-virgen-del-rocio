@@ -27,7 +27,7 @@ section h2{color:#5b1022;font-size:30px;margin-bottom:18px}
 section p{max-width:750px;margin:auto}
 .gold{color:#a17a32}
 .private{background:#f0e9e3;border-top:1px solid #e2d5c8;border-bottom:1px solid #e2d5c8}
-.panel{max-width:950px;margin:30px auto 0;padding:28px;background:white;border:1px solid #e2d5c8;border-radius:8px;text-align:left;box-shadow:0 5px 20px #0000000c}
+.panel{max-width:1100px;margin:30px auto 0;padding:28px;background:white;border:1px solid #e2d5c8;border-radius:8px;text-align:left;box-shadow:0 5px 20px #0000000c}
 .panel h3{text-align:center;color:#5b1022;margin-bottom:18px}
 .panel label{display:block;margin:13px 0 5px}
 .panel input,.panel select,.panel textarea{width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px;font-family:Arial,sans-serif;background:white}
@@ -49,11 +49,16 @@ th{background:#f6f0eb;color:#5b1022}
 td button{padding:6px 10px;margin:3px;border:0;border-radius:4px;color:white;background:#5b1022;cursor:pointer}
 td button.delete{background:#8d2525}
 .badge{display:inline-block;background:#f0e9e3;padding:4px 9px;border-radius:20px;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:20px 0}
+.stat{padding:20px;background:#f6f0eb;border:1px solid #e2d5c8;border-radius:7px;text-align:center}
+.stat strong{display:block;color:#5b1022;font-size:25px}
+.stat span{font-size:13px;color:#75635d}
+hr{margin:30px 0;border:0;border-top:1px solid #e2d5c8}
 footer{background:#241b1b;color:#eee;text-align:center;padding:28px 15px;font-size:13px}
 @media(max-width:600px){
 header{justify-content:center;text-align:center}
 nav{justify-content:center}
-.form-grid{grid-template-columns:1fr}
+.form-grid,.stats{grid-template-columns:1fr}
 .form-grid .full{grid-column:auto}
 .panel{padding:18px}
 }
@@ -113,7 +118,8 @@ nav{justify-content:center}
     <p id="memberRole" class="gold" style="text-align:center;margin-top:8px"></p>
 
     <div id="adminPanel" class="hidden">
-      <hr style="margin:25px 0;border:0;border-top:1px solid #e2d5c8">
+
+      <hr>
       <h3>Gestión de socios</h3>
       <p style="text-align:center">Añade, consulta, modifica o elimina fichas de socios.</p>
 
@@ -168,7 +174,7 @@ nav{justify-content:center}
           </div>
         </div>
 
-        <h3 style="text-align:left;margin-top:28px">Cuotas y pagos</h3>
+        <h3 style="text-align:left;margin-top:28px">Cuotas del socio</h3>
         <div class="form-grid">
           <div>
             <label for="cuotaSocio">Importe de la cuota (€)</label>
@@ -182,7 +188,7 @@ nav{justify-content:center}
             </select>
           </div>
           <div>
-            <label for="formaPago">Forma de pago</label>
+            <label for="formaPago">Forma de pago habitual</label>
             <select id="formaPago">
               <option value="">Seleccionar</option>
               <option value="transferencia">Transferencia</option>
@@ -221,12 +227,8 @@ nav{justify-content:center}
         <table>
           <thead>
             <tr>
-              <th>N.º</th>
-              <th>Socio</th>
-              <th>Contacto</th>
-              <th>Cuota</th>
-              <th>Estado</th>
-              <th>Acciones</th>
+              <th>N.º</th><th>Socio</th><th>Contacto</th>
+              <th>Cuota</th><th>Estado</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody id="sociosTable">
@@ -235,6 +237,88 @@ nav{justify-content:center}
         </table>
       </div>
       <p id="totalSocios" class="message"></p>
+
+      <hr>
+
+      <h3>Gestión de cuotas y pagos</h3>
+      <p style="text-align:center">Registra los pagos realizados por los socios y consulta el historial económico.</p>
+
+      <div class="stats">
+        <div class="stat">
+          <strong id="totalIngresos">0,00 €</strong>
+          <span>Total de ingresos registrados</span>
+        </div>
+        <div class="stat">
+          <strong id="numeroPagos">0</strong>
+          <span>Pagos registrados</span>
+        </div>
+      </div>
+
+      <form id="pagoForm">
+        <h3 style="text-align:left">Registrar un pago</h3>
+        <div class="form-grid">
+          <div class="full">
+            <label for="pagoSocio">Socio</label>
+            <select id="pagoSocio" required>
+              <option value="">Selecciona un socio</option>
+            </select>
+          </div>
+          <div>
+            <label for="importePago">Importe abonado (€)</label>
+            <input id="importePago" type="number" min="0.01" step="0.01" required>
+          </div>
+          <div>
+            <label for="fechaPago">Fecha del pago</label>
+            <input id="fechaPago" type="date" required>
+          </div>
+          <div>
+            <label for="periodoPago">Periodo que se abona</label>
+            <input id="periodoPago" type="text" placeholder="Ej.: Enero 2027 o Año 2027" required>
+          </div>
+          <div>
+            <label for="metodoPago">Forma de pago</label>
+            <select id="metodoPago" required>
+              <option value="">Seleccionar</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="domiciliacion">Domiciliación</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="observacionesPago">Observaciones del pago</label>
+            <textarea id="observacionesPago" rows="3"></textarea>
+          </div>
+        </div>
+        <button class="button" type="submit" id="savePagoButton">Registrar pago</button>
+      </form>
+
+      <p id="pagoMessage" class="message" role="status"></p>
+
+      <div class="search">
+        <label for="buscarPagos">Buscar en el historial de pagos</label>
+        <input id="buscarPagos" type="search" placeholder="Número, nombre o periodo...">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>N.º socio</th>
+              <th>Socio</th>
+              <th>Periodo</th>
+              <th>Importe</th>
+              <th>Forma de pago</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="pagosTable">
+            <tr><td colspan="7">Cargando pagos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="totalPagos" class="message"></p>
     </div>
 
     <div id="memberInfo">
@@ -253,22 +337,13 @@ nav{justify-content:center}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
 import {
-  getAuth,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signOut,
-  onAuthStateChanged
+  getAuth, signInWithEmailAndPassword, sendPasswordResetEmail,
+  signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc
+  getFirestore, doc, getDoc, collection, getDocs,
+  addDoc, updateDoc, deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -295,7 +370,14 @@ const memberMessage = document.getElementById("memberMessage");
 const loginButton = document.getElementById("loginButton");
 
 let sociosCache = [];
+let pagosCache = [];
 let esAdministrador = false;
+
+function fechaHoy() {
+  const ahora = new Date();
+  const local = new Date(ahora.getTime() - ahora.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0,10);
+}
 
 function showLogin(message = "") {
   accessPanel.classList.remove("hidden");
@@ -306,15 +388,10 @@ function showLogin(message = "") {
 function showMember(profile) {
   accessPanel.classList.add("hidden");
   memberPanel.classList.remove("hidden");
-
-  document.getElementById("memberName").textContent =
-    profile.nombre || "Socio/a";
-
+  document.getElementById("memberName").textContent = profile.nombre || "Socio/a";
   esAdministrador = profile.rol === "admin";
-
   document.getElementById("memberRole").textContent =
     esAdministrador ? "ADMINISTRADOR" : "SOCIO/A";
-
   adminPanel.classList.toggle("hidden", !esAdministrador);
   memberInfo.classList.toggle("hidden", esAdministrador);
 }
@@ -323,7 +400,6 @@ loginForm.addEventListener("submit", async event => {
   event.preventDefault();
   loginButton.disabled = true;
   loginMessage.textContent = "Comprobando acceso...";
-
   try {
     await signInWithEmailAndPassword(
       auth,
@@ -332,8 +408,7 @@ loginForm.addEventListener("submit", async event => {
     );
   } catch (error) {
     console.error(error);
-    loginMessage.textContent =
-      "No se ha podido iniciar sesión. Comprueba el correo y la contraseña.";
+    loginMessage.textContent = "No se ha podido iniciar sesión. Comprueba el correo y la contraseña.";
   } finally {
     loginButton.disabled = false;
   }
@@ -341,20 +416,16 @@ loginForm.addEventListener("submit", async event => {
 
 document.getElementById("forgotButton").addEventListener("click", async () => {
   const email = document.getElementById("email").value.trim();
-
   if (!email) {
     loginMessage.textContent = "Escribe primero tu correo electrónico.";
     return;
   }
-
   try {
     await sendPasswordResetEmail(auth, email);
-    loginMessage.textContent =
-      "Si la cuenta existe, recibirás un correo para restablecer la contraseña.";
+    loginMessage.textContent = "Si la cuenta existe, recibirás un correo para restablecer la contraseña.";
   } catch (error) {
     console.error(error);
-    loginMessage.textContent =
-      "No se ha podido enviar el correo. Comprueba la dirección.";
+    loginMessage.textContent = "No se ha podido enviar el correo. Comprueba la dirección.";
   }
 });
 
@@ -364,7 +435,7 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
   showLogin("Has cerrado la sesión correctamente.");
 });
 
-/* FUNCIONES DE GESTIÓN DE SOCIOS */
+/* GESTIÓN DE SOCIOS */
 
 const socioForm = document.getElementById("socioForm");
 const socioMessage = document.getElementById("socioMessage");
@@ -382,7 +453,7 @@ function ponerValor(id, dato) {
 function limpiarFormulario() {
   socioForm.reset();
   ponerValor("socioId", "");
-  ponerValor("fechaAlta", new Date().toISOString().slice(0,10));
+  ponerValor("fechaAlta", fechaHoy());
   ponerValor("periodicidadCuota", "mensual");
   ponerValor("estadoSocio", "activo");
   saveSocioButton.textContent = "Guardar socio";
@@ -393,87 +464,63 @@ document.getElementById("cancelEditButton").addEventListener("click", limpiarFor
 
 function escapar(texto) {
   return String(texto ?? "").replace(/[&<>"']/g, letra => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[letra]));
+}
+
+function formatoDinero(numero) {
+  return Number(numero || 0).toLocaleString("es-ES", {
+    style:"currency",currency:"EUR"
+  });
 }
 
 async function cargarSocios() {
   if (!esAdministrador) return;
-
-  sociosTable.innerHTML =
-    '<tr><td colspan="6">Cargando socios...</td></tr>';
-
+  sociosTable.innerHTML = '<tr><td colspan="6">Cargando socios...</td></tr>';
   try {
     const resultado = await getDocs(collection(db, "socios"));
-
     sociosCache = resultado.docs.map(documento => ({
-      id: documento.id,
-      ...documento.data()
+      id:documento.id, ...documento.data()
     }));
-
-    sociosCache.sort((a,b) =>
-      Number(a.numeroSocio || 0) - Number(b.numeroSocio || 0)
-    );
-
+    sociosCache.sort((a,b) => Number(a.numeroSocio || 0) - Number(b.numeroSocio || 0));
     mostrarSocios();
+    actualizarSelectorSocios();
   } catch (error) {
     console.error(error);
-    sociosTable.innerHTML =
-      '<tr><td colspan="6">No se han podido cargar los socios.</td></tr>';
-    socioMessage.textContent =
-      "Comprueba los permisos de Firestore y vuelve a intentarlo.";
+    sociosTable.innerHTML = '<tr><td colspan="6">No se han podido cargar los socios.</td></tr>';
+    socioMessage.textContent = "Comprueba los permisos de Firestore.";
   }
 }
 
 function mostrarSocios() {
   const busqueda = valor("searchSocios").trim().toLowerCase();
-
   const filtrados = sociosCache.filter(socio => {
     const texto = [
-      socio.numeroSocio,
-      socio.nombre,
-      socio.apellidos,
-      socio.dni,
-      socio.email,
-      socio.telefono
+      socio.numeroSocio,socio.nombre,socio.apellidos,
+      socio.dni,socio.email,socio.telefono
     ].join(" ").toLowerCase();
-
     return texto.includes(busqueda);
   });
 
   sociosTable.innerHTML = "";
-
   if (!filtrados.length) {
-    sociosTable.innerHTML =
-      '<tr><td colspan="6">No hay socios que mostrar.</td></tr>';
+    sociosTable.innerHTML = '<tr><td colspan="6">No hay socios que mostrar.</td></tr>';
   } else {
     filtrados.forEach(socio => {
       const fila = document.createElement("tr");
-
-      const cuota = socio.cuota !== undefined
-        ? Number(socio.cuota).toFixed(2) + " €"
-        : "—";
-
       fila.innerHTML = `
         <td>${escapar(socio.numeroSocio)}</td>
         <td>${escapar(socio.nombre)} ${escapar(socio.apellidos)}</td>
         <td>${escapar(socio.email || "")}<br>${escapar(socio.telefono || "")}</td>
-        <td>${escapar(cuota)}</td>
+        <td>${escapar(formatoDinero(socio.cuota))}</td>
         <td><span class="badge">${escapar(socio.estado || "activo")}</span></td>
         <td>
           <button type="button" data-edit="${escapar(socio.id)}">Editar</button>
           <button type="button" class="delete" data-delete="${escapar(socio.id)}">Eliminar</button>
-        </td>
-      `;
-
+        </td>`;
       sociosTable.appendChild(fila);
     });
   }
-
   document.getElementById("totalSocios").textContent =
     `Socios: ${sociosCache.length} · Mostrados: ${filtrados.length}`;
 }
@@ -482,7 +529,6 @@ document.getElementById("searchSocios").addEventListener("input", mostrarSocios)
 
 socioForm.addEventListener("submit", async event => {
   event.preventDefault();
-
   if (!esAdministrador || !auth.currentUser) {
     socioMessage.textContent = "No tienes permisos para esta operación.";
     return;
@@ -490,60 +536,47 @@ socioForm.addEventListener("submit", async event => {
 
   saveSocioButton.disabled = true;
   socioMessage.textContent = "Guardando socio...";
-
   const id = valor("socioId");
 
   const datos = {
-    numeroSocio: Number(valor("numeroSocio")),
-    nombre: valor("nombreSocio").trim(),
-    apellidos: valor("apellidosSocio").trim(),
-    dni: valor("dniSocio").trim(),
-    email: valor("emailSocio").trim(),
-    telefono: valor("telefonoSocio").trim(),
-    direccion: valor("direccionSocio").trim(),
-    codigoPostal: valor("codigoPostal").trim(),
-    localidad: valor("localidadSocio").trim(),
-    fechaNacimiento: valor("fechaNacimiento"),
-    fechaAlta: valor("fechaAlta"),
-    cuota: Number(valor("cuotaSocio") || 0),
-    periodicidadCuota: valor("periodicidadCuota"),
-    formaPago: valor("formaPago"),
-    observaciones: valor("observacionesSocio").trim(),
-    estado: valor("estadoSocio")
+    numeroSocio:Number(valor("numeroSocio")),
+    nombre:valor("nombreSocio").trim(),
+    apellidos:valor("apellidosSocio").trim(),
+    dni:valor("dniSocio").trim(),
+    email:valor("emailSocio").trim(),
+    telefono:valor("telefonoSocio").trim(),
+    direccion:valor("direccionSocio").trim(),
+    codigoPostal:valor("codigoPostal").trim(),
+    localidad:valor("localidadSocio").trim(),
+    fechaNacimiento:valor("fechaNacimiento"),
+    fechaAlta:valor("fechaAlta"),
+    cuota:Number(valor("cuotaSocio") || 0),
+    periodicidadCuota:valor("periodicidadCuota"),
+    formaPago:valor("formaPago"),
+    observaciones:valor("observacionesSocio").trim(),
+    estado:valor("estadoSocio")
   };
 
   try {
-    if (!Number.isInteger(datos.numeroSocio) || datos.numeroSocio < 1) {
+    if (!Number.isInteger(datos.numeroSocio) || datos.numeroSocio < 1)
       throw new Error("El número de socio debe ser un entero positivo.");
-    }
-
-    if (!datos.nombre || !datos.apellidos || !datos.fechaAlta) {
+    if (!datos.nombre || !datos.apellidos || !datos.fechaAlta)
       throw new Error("Completa el nombre, los apellidos y la fecha de alta.");
-    }
-
-    const duplicado = sociosCache.some(s =>
-      Number(s.numeroSocio) === datos.numeroSocio && s.id !== id
-    );
-
-    if (duplicado) {
+    if (sociosCache.some(s => Number(s.numeroSocio) === datos.numeroSocio && s.id !== id))
       throw new Error("Ya existe un socio con ese número.");
-    }
 
     if (id) {
-      await updateDoc(doc(db, "socios", id), datos);
+      await updateDoc(doc(db,"socios",id),datos);
       socioMessage.textContent = "Socio actualizado correctamente.";
     } else {
-      await addDoc(collection(db, "socios"), datos);
+      await addDoc(collection(db,"socios"),datos);
       socioMessage.textContent = "Socio añadido correctamente.";
     }
-
     limpiarFormulario();
     await cargarSocios();
-
   } catch (error) {
     console.error(error);
-    socioMessage.textContent =
-      error.message || "No se ha podido guardar el socio.";
+    socioMessage.textContent = error.message || "No se ha podido guardar el socio.";
   } finally {
     saveSocioButton.disabled = false;
   }
@@ -554,52 +587,36 @@ sociosTable.addEventListener("click", async event => {
   const botonEliminar = event.target.closest("[data-delete]");
 
   if (botonEditar) {
-    const socio = sociosCache.find(s =>
-      s.id === botonEditar.dataset.edit
-    );
-
+    const socio = sociosCache.find(s => s.id === botonEditar.dataset.edit);
     if (!socio) return;
-
-    ponerValor("socioId", socio.id);
-    ponerValor("numeroSocio", socio.numeroSocio);
-    ponerValor("nombreSocio", socio.nombre);
-    ponerValor("apellidosSocio", socio.apellidos);
-    ponerValor("dniSocio", socio.dni);
-    ponerValor("emailSocio", socio.email);
-    ponerValor("telefonoSocio", socio.telefono);
-    ponerValor("direccionSocio", socio.direccion);
-    ponerValor("codigoPostal", socio.codigoPostal);
-    ponerValor("localidadSocio", socio.localidad);
-    ponerValor("fechaNacimiento", socio.fechaNacimiento);
-    ponerValor("fechaAlta", socio.fechaAlta);
-    ponerValor("cuotaSocio", socio.cuota);
-    ponerValor("periodicidadCuota", socio.periodicidadCuota || "mensual");
-    ponerValor("formaPago", socio.formaPago);
-    ponerValor("observacionesSocio", socio.observaciones);
-    ponerValor("estadoSocio", socio.estado || "activo");
-
+    ponerValor("socioId",socio.id);
+    ponerValor("numeroSocio",socio.numeroSocio);
+    ponerValor("nombreSocio",socio.nombre);
+    ponerValor("apellidosSocio",socio.apellidos);
+    ponerValor("dniSocio",socio.dni);
+    ponerValor("emailSocio",socio.email);
+    ponerValor("telefonoSocio",socio.telefono);
+    ponerValor("direccionSocio",socio.direccion);
+    ponerValor("codigoPostal",socio.codigoPostal);
+    ponerValor("localidadSocio",socio.localidad);
+    ponerValor("fechaNacimiento",socio.fechaNacimiento);
+    ponerValor("fechaAlta",socio.fechaAlta);
+    ponerValor("cuotaSocio",socio.cuota);
+    ponerValor("periodicidadCuota",socio.periodicidadCuota || "mensual");
+    ponerValor("formaPago",socio.formaPago);
+    ponerValor("observacionesSocio",socio.observaciones);
+    ponerValor("estadoSocio",socio.estado || "activo");
     saveSocioButton.textContent = "Actualizar socio";
-    socioMessage.textContent =
-      "Editando socio número " + socio.numeroSocio;
-
+    socioMessage.textContent = "Editando socio número " + socio.numeroSocio;
     socioForm.scrollIntoView({behavior:"smooth",block:"start"});
   }
 
   if (botonEliminar) {
-    const socio = sociosCache.find(s =>
-      s.id === botonEliminar.dataset.delete
-    );
-
+    const socio = sociosCache.find(s => s.id === botonEliminar.dataset.delete);
     if (!socio) return;
-
-    const confirmar = confirm(
-      `¿Seguro que quieres eliminar al socio ${socio.nombre} ${socio.apellidos}?`
-    );
-
-    if (!confirmar) return;
-
+    if (!confirm(`¿Seguro que quieres eliminar al socio ${socio.nombre} ${socio.apellidos}?`)) return;
     try {
-      await deleteDoc(doc(db, "socios", socio.id));
+      await deleteDoc(doc(db,"socios",socio.id));
       socioMessage.textContent = "Socio eliminado correctamente.";
       limpiarFormulario();
       await cargarSocios();
@@ -610,9 +627,161 @@ sociosTable.addEventListener("click", async event => {
   }
 });
 
-/* COMPROBACIÓN DEL ACCESO Y DEL PERFIL */
+/* GESTIÓN DE PAGOS */
 
-onAuthStateChanged(auth, async user => {
+const pagoForm = document.getElementById("pagoForm");
+const pagoMessage = document.getElementById("pagoMessage");
+const savePagoButton = document.getElementById("savePagoButton");
+const pagosTable = document.getElementById("pagosTable");
+
+function actualizarSelectorSocios() {
+  const selector = document.getElementById("pagoSocio");
+  const seleccionado = selector.value;
+  selector.innerHTML = '<option value="">Selecciona un socio</option>';
+
+  sociosCache
+    .filter(s => s.estado !== "inactivo")
+    .sort((a,b) => Number(a.numeroSocio || 0) - Number(b.numeroSocio || 0))
+    .forEach(socio => {
+      const opcion = document.createElement("option");
+      opcion.value = socio.id;
+      opcion.textContent = `${socio.numeroSocio} - ${socio.nombre} ${socio.apellidos}`;
+      selector.appendChild(opcion);
+    });
+
+  if (sociosCache.some(s => s.id === seleccionado))
+    selector.value = seleccionado;
+}
+
+async function cargarPagos() {
+  if (!esAdministrador) return;
+  pagosTable.innerHTML = '<tr><td colspan="7">Cargando pagos...</td></tr>';
+
+  try {
+    const resultado = await getDocs(collection(db,"pagos"));
+    pagosCache = resultado.docs.map(documento => ({
+      id:documento.id, ...documento.data()
+    }));
+    pagosCache.sort((a,b) => String(b.fechaPago || "").localeCompare(String(a.fechaPago || "")));
+    mostrarPagos();
+  } catch (error) {
+    console.error(error);
+    pagosTable.innerHTML = '<tr><td colspan="7">No se han podido cargar los pagos. Revisa las reglas de Firestore.</td></tr>';
+    pagoMessage.textContent = "La colección pagos necesita permisos de lectura.";
+  }
+}
+
+function mostrarPagos() {
+  const busqueda = valor("buscarPagos").trim().toLowerCase();
+  const filtrados = pagosCache.filter(p => [
+    p.numeroSocio,p.nombreSocio,p.periodo,p.formaPago,p.fechaPago
+  ].join(" ").toLowerCase().includes(busqueda));
+
+  const total = pagosCache.reduce((suma,p) => suma + Number(p.importe || 0),0);
+  document.getElementById("totalIngresos").textContent = formatoDinero(total);
+  document.getElementById("numeroPagos").textContent = pagosCache.length;
+
+  pagosTable.innerHTML = "";
+  if (!filtrados.length) {
+    pagosTable.innerHTML = '<tr><td colspan="7">Todavía no hay pagos registrados.</td></tr>';
+  } else {
+    filtrados.forEach(pago => {
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${escapar(pago.fechaPago)}</td>
+        <td>${escapar(pago.numeroSocio)}</td>
+        <td>${escapar(pago.nombreSocio)}</td>
+        <td>${escapar(pago.periodo)}</td>
+        <td>${escapar(formatoDinero(pago.importe))}</td>
+        <td>${escapar(pago.formaPago)}</td>
+        <td><button type="button" class="delete" data-delete-pago="${escapar(pago.id)}">Eliminar</button></td>`;
+      pagosTable.appendChild(fila);
+    });
+  }
+  document.getElementById("totalPagos").textContent =
+    `Pagos registrados: ${pagosCache.length} · Mostrados: ${filtrados.length}`;
+}
+
+document.getElementById("buscarPagos").addEventListener("input",mostrarPagos);
+
+document.getElementById("fechaPago").value = fechaHoy();
+
+pagoForm.addEventListener("submit",async event => {
+  event.preventDefault();
+  if (!esAdministrador || !auth.currentUser) {
+    pagoMessage.textContent = "No tienes permisos para registrar pagos.";
+    return;
+  }
+
+  const socio = sociosCache.find(s => s.id === valor("pagoSocio"));
+  if (!socio) {
+    pagoMessage.textContent = "Selecciona un socio válido.";
+    return;
+  }
+
+  const importe = Number(valor("importePago"));
+  if (!Number.isFinite(importe) || importe <= 0) {
+    pagoMessage.textContent = "El importe debe ser mayor que cero.";
+    return;
+  }
+
+  const datosPago = {
+    socioId:socio.id,
+    numeroSocio:Number(socio.numeroSocio),
+    nombreSocio:`${socio.nombre} ${socio.apellidos}`,
+    importe:importe,
+    fechaPago:valor("fechaPago"),
+    periodo:valor("periodoPago").trim(),
+    formaPago:valor("metodoPago"),
+    observaciones:valor("observacionesPago").trim(),
+    registradoPor:auth.currentUser.uid
+  };
+
+  if (!datosPago.fechaPago || !datosPago.periodo || !datosPago.formaPago) {
+    pagoMessage.textContent = "Completa todos los campos obligatorios.";
+    return;
+  }
+
+  savePagoButton.disabled = true;
+  pagoMessage.textContent = "Registrando pago...";
+
+  try {
+    await addDoc(collection(db,"pagos"),datosPago);
+    pagoForm.reset();
+    document.getElementById("fechaPago").value = fechaHoy();
+    pagoMessage.textContent = "Pago registrado correctamente.";
+    await cargarPagos();
+  } catch (error) {
+    console.error(error);
+    pagoMessage.textContent = "No se ha podido registrar el pago. Comprueba las reglas de Firestore.";
+  } finally {
+    savePagoButton.disabled = false;
+  }
+});
+
+pagosTable.addEventListener("click",async event => {
+  const boton = event.target.closest("[data-delete-pago]");
+  if (!boton) return;
+
+  const pago = pagosCache.find(p => p.id === boton.dataset.deletePago);
+  if (!pago) return;
+
+  if (!confirm(`¿Eliminar el pago de ${pago.nombreSocio} por ${formatoDinero(pago.importe)}?`))
+    return;
+
+  try {
+    await deleteDoc(doc(db,"pagos",pago.id));
+    pagoMessage.textContent = "Pago eliminado correctamente.";
+    await cargarPagos();
+  } catch (error) {
+    console.error(error);
+    pagoMessage.textContent = "No se ha podido eliminar el pago.";
+  }
+});
+
+/* COMPROBACIÓN DEL ACCESO */
+
+onAuthStateChanged(auth,async user => {
   if (!user) {
     esAdministrador = false;
     showLogin();
@@ -620,8 +789,7 @@ onAuthStateChanged(auth, async user => {
   }
 
   try {
-    const profileSnap = await getDoc(doc(db, "users", user.uid));
-
+    const profileSnap = await getDoc(doc(db,"users",user.uid));
     if (!profileSnap.exists() || profileSnap.data().activo !== true) {
       await signOut(auth);
       showLogin("Tu cuenta no está activa o todavía no ha sido autorizada.");
@@ -634,10 +802,10 @@ onAuthStateChanged(auth, async user => {
     if (profile.rol === "admin") {
       limpiarFormulario();
       await cargarSocios();
+      await cargarPagos();
     }
-
   } catch (error) {
-    console.error("Error al consultar el perfil:", error);
+    console.error("Error al consultar el perfil:",error);
     await signOut(auth);
     showLogin("No se ha podido verificar tu cuenta. Inténtalo de nuevo.");
   }
