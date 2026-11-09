@@ -119,5 +119,26 @@
   <footer>
     © 2026 A.C.F. Virgen del Rocío · Valmojado
   </footer>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCLMQAXwtWH_M1CgifV1cWOrU1-JevgAlQ",
+    authDomain: "acf-virgen-del-rocio.firebaseapp.com",
+    projectId: "acf-virgen-del-rocio",
+    storageBucket: "acf-virgen-del-rocio.firebasestorage.app",
+    messagingSenderId: "719267285989",
+    appId: "1:719267285989:web:4f959b7ad5c81f0f903d0c",
+    measurementId: "G-3L8JFHWJX3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  console.log("Firebase conectado correctamente");
+</script>
 </body>
 </html>
