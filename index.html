@@ -1,66 +1,1107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5b1022">
+<title>A.C.F. Virgen del Rocío | Valmojado</title>
+<meta name="description" content="Web oficial de la Asociación Cultural Flamenca Virgen del Rocío de Valmojado.">
 
-rules_version = '2';
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#faf7f3;color:#241b1b;line-height:1.6}
+header{background:#5b1022;color:white;padding:22px 7%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+.brand{font-size:19px;font-weight:bold}
+nav{display:flex;gap:20px;flex-wrap:wrap}
+nav a{color:white;text-decoration:none;font-size:14px}
+.hero{min-height:440px;padding:90px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,#350914,#781c32);color:white}
+.ornament{color:#d9b66d;font-size:35px}
+.hero h1{font-size:clamp(34px,6vw,58px);margin:15px 0}
+.hero p{max-width:650px;font-size:18px}
+.button{display:inline-block;margin-top:22px;padding:12px 25px;border:1px solid #d9b66d;color:#fff;background:#5b1022;text-decoration:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:15px}
+.button:hover{background:#781c32}
+button:disabled{opacity:.5;cursor:not-allowed}
+section{padding:65px 8%;text-align:center}
+section h2{color:#5b1022;font-size:30px;margin-bottom:18px}
+section p{max-width:750px;margin:auto}
+.gold{color:#a17a32}
+.private{background:#f0e9e3;border-top:1px solid #e2d5c8;border-bottom:1px solid #e2d5c8}
+.panel{max-width:1100px;margin:30px auto 0;padding:28px;background:white;border:1px solid #e2d5c8;border-radius:8px;text-align:left;box-shadow:0 5px 20px #0000000c}
+.panel h3{text-align:center;color:#5b1022;margin-bottom:18px}
+.panel label{display:block;margin:13px 0 5px}
+.panel input,.panel select,.panel textarea{width:100%;padding:12px;border:1px solid #cfc4bc;border-radius:4px;font-size:16px;font-family:Arial,sans-serif;background:white}
+.panel .button{width:100%;text-align:center}
+.link{display:block;text-align:center;margin-top:16px;color:#781c32;cursor:pointer;text-decoration:underline;background:none;border:0;font:inherit}
+.message{margin-top:15px;text-align:center;font-size:14px;overflow-wrap:anywhere}
+.hidden{display:none!important}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.form-grid .full{grid-column:1/-1}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.actions button{flex:1;min-width:120px}
+.secondary{background:#75635d;border-color:#75635d}
+.danger{background:#8d2525;border-color:#8d2525}
+.search{margin:25px 0}
+.table-wrap{overflow-x:auto;margin-top:15px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px;border-bottom:1px solid #e2d5c8;text-align:left}
+th{background:#f6f0eb;color:#5b1022}
+td button{padding:6px 10px;margin:3px;border:0;border-radius:4px;color:white;background:#5b1022;cursor:pointer}
+td button.delete{background:#8d2525}
+td button.secondary{background:#75635d}
+.badge{display:inline-block;background:#f0e9e3;padding:4px 9px;border-radius:20px;font-size:12px}
+.badge.admin{background:#f2e4bd;color:#674900}
+.badge.inactive{background:#f5dddd;color:#8d2525}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:20px 0}
+.stat{padding:20px;background:#f6f0eb;border:1px solid #e2d5c8;border-radius:7px;text-align:center}
+.stat strong{display:block;color:#5b1022;font-size:25px}
+.stat span{font-size:13px;color:#75635d}
+hr{margin:30px 0;border:0;border-top:1px solid #e2d5c8}
+footer{background:#241b1b;color:#eee;text-align:center;padding:28px 15px;font-size:13px}
+@media(max-width:600px){
+header{justify-content:center;text-align:center}
+nav{justify-content:center}
+.form-grid,.stats{grid-template-columns:1fr}
+.form-grid .full{grid-column:auto}
+.panel{padding:18px}
+}
+</style>
+</head>
 
-service cloud.firestore {
-  match /databases/{database}/documents {
+<body>
+<header>
+  <div class="brand">A.C.F. VIRGEN DEL ROCÍO</div>
+  <nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#asociacion">La asociación</a>
+    <a href="#actividades">Actividades</a>
+    <a href="#socios">Socios</a>
+  </nav>
+</header>
 
-    function usuarioActivo() {
-      return request.auth != null
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.activo == true;
-    }
+<main>
+<section class="hero" id="inicio">
+  <div class="ornament">✦ ✦ ✦</div>
+  <h1>Asociación Cultural Flamenca<br>Virgen del Rocío</h1>
+  <p>Tradición, cultura, flamenco y pasión por nuestras raíces.</p>
+  <a class="button" href="#asociacion">Descubre nuestra asociación</a>
+</section>
 
-    function esAdmin() {
-      return usuarioActivo()
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == "admin";
-    }
+<section id="asociacion">
+  <h2>Nuestra asociación</h2>
+  <p>Bienvenidos a la Asociación Cultural Flamenca Virgen del Rocío de Valmojado. Un espacio para compartir, disfrutar y mantener viva la cultura flamenca.</p>
+  <p class="gold" style="margin-top:20px">VALMOJADO</p>
+</section>
 
-    match /users/{userId} {
-      allow read: if usuarioActivo()
-        && (request.auth.uid == userId || esAdmin());
+<section id="actividades">
+  <h2>Actividades y eventos</h2>
+  <p>Próximamente podrás consultar aquí nuestras actividades, actuaciones, celebraciones y eventos culturales.</p>
+</section>
 
-      allow create: if esAdmin()
-        && request.resource.data.keys().hasOnly([
-          'email', 'nombre', 'rol', 'activo'
-        ])
-        && request.resource.data.email is string
-        && request.resource.data.nombre is string
-        && request.resource.data.rol in ['admin', 'socio']
-        && request.resource.data.activo is bool;
+<section class="private" id="socios">
+  <h2>Zona privada de socios</h2>
+  <p>Accede a tu espacio privado para consultar la información de la asociación.</p>
 
-      allow update: if esAdmin()
-        && request.auth.uid != userId
-        && request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['rol', 'activo'])
-        && request.resource.data.rol in ['admin', 'socio']
-        && request.resource.data.activo is bool;
+  <div id="accessPanel" class="panel">
+    <h3>Acceso de socios</h3>
+    <form id="loginForm">
+      <label for="email">Correo electrónico</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Contraseña</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button class="button" type="submit" id="loginButton">Iniciar sesión</button>
+    </form>
+    <button class="link" id="forgotButton" type="button">He olvidado mi contraseña</button>
+    <p id="loginMessage" class="message" role="status"></p>
+  </div>
 
-      allow delete: if esAdmin()
-        && request.auth.uid != userId;
-    }
+  <div id="memberPanel" class="panel hidden">
+    <h3>Bienvenido/a</h3>
+    <p id="memberName" style="text-align:center"></p>
+    <p id="memberRole" class="gold" style="text-align:center;margin-top:8px"></p>
 
-    match /socios/{socioId} {
-      allow read: if esAdmin()
-        || (
-          usuarioActivo()
-          && resource.data.usuarioUid == request.auth.uid
-        );
+    <div id="adminPanel" class="hidden">
 
-      allow create, update, delete: if esAdmin();
-    }
+      <hr>
+      <h3>Gestión de socios</h3>
+      <p style="text-align:center">Añade, consulta, modifica o elimina fichas de socios.</p>
 
-    match /pagos/{pagoId} {
-      allow read: if esAdmin()
-        || (
-          usuarioActivo()
-          && resource.data.usuarioUid == request.auth.uid
-        );
+      <form id="socioForm">
+        <input type="hidden" id="socioId">
 
-      allow create, delete: if esAdmin();
-    }
+        <h3 style="text-align:left;margin-top:25px">Datos personales</h3>
+        <div class="form-grid">
+          <div>
+            <label for="numeroSocio">Número de socio</label>
+            <input id="numeroSocio" type="number" min="1" step="1" required>
+          </div>
+          <div>
+            <label for="nombreSocio">Nombre</label>
+            <input id="nombreSocio" type="text" required>
+          </div>
+          <div>
+            <label for="apellidosSocio">Apellidos</label>
+            <input id="apellidosSocio" type="text" required>
+          </div>
+          <div>
+            <label for="dniSocio">DNI</label>
+            <input id="dniSocio" type="text">
+          </div>
+          <div>
+            <label for="emailSocio">Correo electrónico</label>
+            <input id="emailSocio" type="email">
+          </div>
+          <div>
+            <label for="telefonoSocio">Teléfono</label>
+            <input id="telefonoSocio" type="tel">
+          </div>
+          <div class="full">
+            <label for="direccionSocio">Dirección</label>
+            <input id="direccionSocio" type="text">
+          </div>
+          <div>
+            <label for="codigoPostal">Código postal</label>
+            <input id="codigoPostal" type="text">
+          </div>
+          <div>
+            <label for="localidadSocio">Localidad</label>
+            <input id="localidadSocio" type="text">
+          </div>
+          <div>
+            <label for="fechaNacimiento">Fecha de nacimiento</label>
+            <input id="fechaNacimiento" type="date">
+          </div>
+          <div>
+            <label for="fechaAlta">Fecha de alta</label>
+            <input id="fechaAlta" type="date" required>
+          </div>
+        </div>
 
-    match /{document=**} {
-      allow read, write: if false;
-    }
+        <h3 style="text-align:left;margin-top:28px">Cuotas del socio</h3>
+        <div class="form-grid">
+          <div>
+            <label for="cuotaSocio">Importe de la cuota (€)</label>
+            <input id="cuotaSocio" type="number" min="0" step="0.01">
+          </div>
+          <div>
+            <label for="periodicidadCuota">Periodicidad</label>
+            <select id="periodicidadCuota">
+              <option value="mensual">Mensual</option>
+              <option value="anual">Anual</option>
+            </select>
+          </div>
+          <div>
+            <label for="formaPago">Forma de pago habitual</label>
+            <select id="formaPago">
+              <option value="">Seleccionar</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="domiciliacion">Domiciliación</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label for="estadoSocio">Estado del socio</label>
+            <select id="estadoSocio">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="observacionesSocio">Observaciones</label>
+            <textarea id="observacionesSocio" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="button" type="submit" id="saveSocioButton">Guardar socio</button>
+          <button class="button secondary" type="button" id="cancelEditButton">Limpiar formulario</button>
+        </div>
+      </form>
+
+      <p id="socioMessage" class="message" role="status"></p>
+
+      <div class="search">
+        <label for="searchSocios">Buscar socio</label>
+        <input id="searchSocios" type="search" placeholder="Nombre, apellidos, DNI o número...">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>N.º</th><th>Socio</th><th>Contacto</th>
+              <th>Cuota</th><th>Estado</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="sociosTable">
+            <tr><td colspan="6">Cargando socios...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="totalSocios" class="message"></p>
+
+      <hr>
+
+      <h3>Gestión de cuotas y pagos</h3>
+      <p style="text-align:center">Registra los pagos realizados por los socios y consulta el historial económico.</p>
+
+      <div class="stats">
+        <div class="stat">
+          <strong id="totalIngresos">0,00 €</strong>
+          <span>Total de ingresos registrados</span>
+        </div>
+        <div class="stat">
+          <strong id="numeroPagos">0</strong>
+          <span>Pagos registrados</span>
+        </div>
+      </div>
+
+      <form id="pagoForm">
+        <h3 style="text-align:left">Registrar un pago</h3>
+        <div class="form-grid">
+          <div class="full">
+            <label for="pagoSocio">Socio</label>
+            <select id="pagoSocio" required>
+              <option value="">Selecciona un socio</option>
+            </select>
+          </div>
+          <div>
+            <label for="importePago">Importe abonado (€)</label>
+            <input id="importePago" type="number" min="0.01" step="0.01" required>
+          </div>
+          <div>
+            <label for="fechaPago">Fecha del pago</label>
+            <input id="fechaPago" type="date" required>
+          </div>
+          <div>
+            <label for="periodoPago">Periodo que se abona</label>
+            <input id="periodoPago" type="text" placeholder="Ej.: Enero 2027 o Año 2027" required>
+          </div>
+          <div>
+            <label for="metodoPago">Forma de pago</label>
+            <select id="metodoPago" required>
+              <option value="">Seleccionar</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="domiciliacion">Domiciliación</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="observacionesPago">Observaciones del pago</label>
+            <textarea id="observacionesPago" rows="3"></textarea>
+          </div>
+        </div>
+        <button class="button" type="submit" id="savePagoButton">Registrar pago</button>
+      </form>
+
+      <p id="pagoMessage" class="message" role="status"></p>
+
+      <div class="search">
+        <label for="buscarPagos">Buscar en el historial de pagos</label>
+        <input id="buscarPagos" type="search" placeholder="Número, nombre o periodo...">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>N.º socio</th>
+              <th>Socio</th>
+              <th>Periodo</th>
+              <th>Importe</th>
+              <th>Forma de pago</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="pagosTable">
+            <tr><td colspan="7">Cargando pagos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="totalPagos" class="message"></p>
+
+      <hr>
+
+      <!-- GESTIÓN DE USUARIOS -->
+      <h3>Gestión de usuarios</h3>
+      <p style="text-align:center">
+        Administra las cuentas autorizadas para acceder a la zona privada.
+      </p>
+
+      <form id="userForm">
+        <h3 style="text-align:left;margin-top:20px">Añadir perfil de usuario</h3>
+
+        <label for="userUid">UID de Firebase Authentication</label>
+        <input id="userUid" type="text" required placeholder="Pega aquí el UID">
+
+        <label for="userEmail">Correo electrónico</label>
+        <input id="userEmail" type="email" required>
+
+        <label for="userName">Nombre</label>
+        <input id="userName" type="text" required>
+
+        <label for="userRole">Permisos</label>
+        <select id="userRole">
+          <option value="socio">Socio</option>
+          <option value="admin">Administrador</option>
+        </select>
+
+        <button class="button" type="submit" id="saveUserButton">
+          Crear perfil de usuario
+        </button>
+      </form>
+
+      <p id="userMessage" class="message" role="status"></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usersTable">
+            <tr><td colspan="5">Cargando usuarios...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div id="memberInfo">
+      <p style="text-align:center;margin-top:18px">Tu acceso está activo.</p>
+    </div>
+
+    <button class="button" id="logoutButton" type="button">Cerrar sesión</button>
+    <p id="memberMessage" class="message"></p>
+  </div>
+</section>
+</main>
+
+<footer>© 2026 A.C.F. Virgen del Rocío · Valmojado</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+import {
+  getAuth, signInWithEmailAndPassword, sendPasswordResetEmail,
+  signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+import {
+  getFirestore, doc, getDoc, collection, getDocs,
+  addDoc, updateDoc, deleteDoc, setDoc
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCLMQAXwtWH_M1CgifV1cWOrU1-JevgAlQ",
+  authDomain: "acf-virgen-del-rocio.firebaseapp.com",
+  projectId: "acf-virgen-del-rocio",
+  storageBucket: "acf-virgen-del-rocio.firebasestorage.app",
+  messagingSenderId: "719267285989",
+  appId: "1:719267285989:web:4f959b7ad5c81f0f903d0c",
+  measurementId: "G-3L8JFHWJX3"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const accessPanel = document.getElementById("accessPanel");
+const memberPanel = document.getElementById("memberPanel");
+const adminPanel = document.getElementById("adminPanel");
+const memberInfo = document.getElementById("memberInfo");
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+const memberMessage = document.getElementById("memberMessage");
+const loginButton = document.getElementById("loginButton");
+
+let sociosCache = [];
+let pagosCache = [];
+let usuariosCache = [];
+let esAdministrador = false;
+
+function fechaHoy() {
+  const ahora = new Date();
+  const local = new Date(ahora.getTime() - ahora.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0,10);
+}
+
+function showLogin(message = "") {
+  accessPanel.classList.remove("hidden");
+  memberPanel.classList.add("hidden");
+  loginMessage.textContent = message;
+}
+
+function showMember(profile) {
+  accessPanel.classList.add("hidden");
+  memberPanel.classList.remove("hidden");
+  document.getElementById("memberName").textContent = profile.nombre || "Socio/a";
+  esAdministrador = profile.rol === "admin";
+  document.getElementById("memberRole").textContent =
+    esAdministrador ? "ADMINISTRADOR" : "SOCIO/A";
+  adminPanel.classList.toggle("hidden", !esAdministrador);
+  memberInfo.classList.toggle("hidden", esAdministrador);
+}
+
+loginForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  loginButton.disabled = true;
+  loginMessage.textContent = "Comprobando acceso...";
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      document.getElementById("email").value.trim(),
+      document.getElementById("password").value
+    );
+  } catch (error) {
+    console.error(error);
+    loginMessage.textContent = "No se ha podido iniciar sesión. Comprueba el correo y la contraseña.";
+  } finally {
+    loginButton.disabled = false;
+  }
+});
+
+document.getElementById("forgotButton").addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim();
+  if (!email) {
+    loginMessage.textContent = "Escribe primero tu correo electrónico.";
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    loginMessage.textContent = "Si la cuenta existe, recibirás un correo para restablecer la contraseña.";
+  } catch (error) {
+    console.error(error);
+    loginMessage.textContent = "No se ha podido enviar el correo. Comprueba la dirección.";
+  }
+});
+
+document.getElementById("logoutButton").addEventListener("click", async () => {
+  await signOut(auth);
+  memberMessage.textContent = "";
+  showLogin("Has cerrado la sesión correctamente.");
+});
+
+/* FUNCIONES GENERALES */
+
+const socioForm = document.getElementById("socioForm");
+const socioMessage = document.getElementById("socioMessage");
+const sociosTable = document.getElementById("sociosTable");
+const saveSocioButton = document.getElementById("saveSocioButton");
+
+function valor(id) {
+  return document.getElementById(id).value;
+}
+
+function ponerValor(id, dato) {
+  document.getElementById(id).value = dato ?? "";
+}
+
+function escapar(texto) {
+  return String(texto ?? "").replace(/[&<>"']/g, letra => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[letra]));
+}
+
+function formatoDinero(numero) {
+  return Number(numero || 0).toLocaleString("es-ES", {
+    style:"currency",currency:"EUR"
+  });
+}
+
+/* GESTIÓN DE SOCIOS */
+
+function limpiarFormulario() {
+  socioForm.reset();
+  ponerValor("socioId", "");
+  ponerValor("fechaAlta", fechaHoy());
+  ponerValor("periodicidadCuota", "mensual");
+  ponerValor("estadoSocio", "activo");
+  saveSocioButton.textContent = "Guardar socio";
+  socioMessage.textContent = "";
+}
+
+document.getElementById("cancelEditButton").addEventListener("click", limpiarFormulario);
+
+async function cargarSocios() {
+  if (!esAdministrador) return;
+  sociosTable.innerHTML = '<tr><td colspan="6">Cargando socios...</td></tr>';
+  try {
+    const resultado = await getDocs(collection(db, "socios"));
+    sociosCache = resultado.docs.map(documento => ({
+      id:documento.id, ...documento.data()
+    }));
+    sociosCache.sort((a,b) => Number(a.numeroSocio || 0) - Number(b.numeroSocio || 0));
+    mostrarSocios();
+    actualizarSelectorSocios();
+  } catch (error) {
+    console.error(error);
+    sociosTable.innerHTML = '<tr><td colspan="6">No se han podido cargar los socios.</td></tr>';
+    socioMessage.textContent = "Comprueba los permisos de Firestore.";
   }
 }
+
+function mostrarSocios() {
+  const busqueda = valor("searchSocios").trim().toLowerCase();
+  const filtrados = sociosCache.filter(socio => {
+    const texto = [
+      socio.numeroSocio,socio.nombre,socio.apellidos,
+      socio.dni,socio.email,socio.telefono
+    ].join(" ").toLowerCase();
+    return texto.includes(busqueda);
+  });
+
+  sociosTable.innerHTML = "";
+  if (!filtrados.length) {
+    sociosTable.innerHTML = '<tr><td colspan="6">No hay socios que mostrar.</td></tr>';
+  } else {
+    filtrados.forEach(socio => {
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${escapar(socio.numeroSocio)}</td>
+        <td>${escapar(socio.nombre)} ${escapar(socio.apellidos)}</td>
+        <td>${escapar(socio.email || "")}<br>${escapar(socio.telefono || "")}</td>
+        <td>${escapar(formatoDinero(socio.cuota))}</td>
+        <td><span class="badge">${escapar(socio.estado || "activo")}</span></td>
+        <td>
+          <button type="button" data-edit="${escapar(socio.id)}">Editar</button>
+          <button type="button" class="delete" data-delete="${escapar(socio.id)}">Eliminar</button>
+        </td>`;
+      sociosTable.appendChild(fila);
+    });
+  }
+  document.getElementById("totalSocios").textContent =
+    `Socios: ${sociosCache.length} · Mostrados: ${filtrados.length}`;
+}
+
+document.getElementById("searchSocios").addEventListener("input", mostrarSocios);
+
+socioForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!esAdministrador || !auth.currentUser) {
+    socioMessage.textContent = "No tienes permisos para esta operación.";
+    return;
+  }
+
+  saveSocioButton.disabled = true;
+  socioMessage.textContent = "Guardando socio...";
+  const id = valor("socioId");
+
+  const datos = {
+    numeroSocio:Number(valor("numeroSocio")),
+    nombre:valor("nombreSocio").trim(),
+    apellidos:valor("apellidosSocio").trim(),
+    dni:valor("dniSocio").trim(),
+    email:valor("emailSocio").trim(),
+    telefono:valor("telefonoSocio").trim(),
+    direccion:valor("direccionSocio").trim(),
+    codigoPostal:valor("codigoPostal").trim(),
+    localidad:valor("localidadSocio").trim(),
+    fechaNacimiento:valor("fechaNacimiento"),
+    fechaAlta:valor("fechaAlta"),
+    cuota:Number(valor("cuotaSocio") || 0),
+    periodicidadCuota:valor("periodicidadCuota"),
+    formaPago:valor("formaPago"),
+    observaciones:valor("observacionesSocio").trim(),
+    estado:valor("estadoSocio")
+  };
+
+  try {
+    if (!Number.isInteger(datos.numeroSocio) || datos.numeroSocio < 1)
+      throw new Error("El número de socio debe ser un entero positivo.");
+    if (!datos.nombre || !datos.apellidos || !datos.fechaAlta)
+      throw new Error("Completa el nombre, los apellidos y la fecha de alta.");
+    if (sociosCache.some(s => Number(s.numeroSocio) === datos.numeroSocio && s.id !== id))
+      throw new Error("Ya existe un socio con ese número.");
+
+    if (id) {
+      await updateDoc(doc(db,"socios",id),datos);
+      socioMessage.textContent = "Socio actualizado correctamente.";
+    } else {
+      await addDoc(collection(db,"socios"),datos);
+      socioMessage.textContent = "Socio añadido correctamente.";
+    }
+    limpiarFormulario();
+    await cargarSocios();
+  } catch (error) {
+    console.error(error);
+    socioMessage.textContent = error.message || "No se ha podido guardar el socio.";
+  } finally {
+    saveSocioButton.disabled = false;
+  }
+});
+
+sociosTable.addEventListener("click", async event => {
+  const botonEditar = event.target.closest("[data-edit]");
+  const botonEliminar = event.target.closest("[data-delete]");
+
+  if (botonEditar) {
+    const socio = sociosCache.find(s => s.id === botonEditar.dataset.edit);
+    if (!socio) return;
+    ponerValor("socioId",socio.id);
+    ponerValor("numeroSocio",socio.numeroSocio);
+    ponerValor("nombreSocio",socio.nombre);
+    ponerValor("apellidosSocio",socio.apellidos);
+    ponerValor("dniSocio",socio.dni);
+    ponerValor("emailSocio",socio.email);
+    ponerValor("telefonoSocio",socio.telefono);
+    ponerValor("direccionSocio",socio.direccion);
+    ponerValor("codigoPostal",socio.codigoPostal);
+    ponerValor("localidadSocio",socio.localidad);
+    ponerValor("fechaNacimiento",socio.fechaNacimiento);
+    ponerValor("fechaAlta",socio.fechaAlta);
+    ponerValor("cuotaSocio",socio.cuota);
+    ponerValor("periodicidadCuota",socio.periodicidadCuota || "mensual");
+    ponerValor("formaPago",socio.formaPago);
+    ponerValor("observacionesSocio",socio.observaciones);
+    ponerValor("estadoSocio",socio.estado || "activo");
+    saveSocioButton.textContent = "Actualizar socio";
+    socioMessage.textContent = "Editando socio número " + socio.numeroSocio;
+    socioForm.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  if (botonEliminar) {
+    const socio = sociosCache.find(s => s.id === botonEliminar.dataset.delete);
+    if (!socio) return;
+    if (!confirm(`¿Seguro que quieres eliminar al socio ${socio.nombre} ${socio.apellidos}?`)) return;
+    try {
+      await deleteDoc(doc(db,"socios",socio.id));
+      socioMessage.textContent = "Socio eliminado correctamente.";
+      limpiarFormulario();
+      await cargarSocios();
+    } catch (error) {
+      console.error(error);
+      socioMessage.textContent = "No se ha podido eliminar el socio.";
+    }
+  }
+});
+
+/* GESTIÓN DE PAGOS */
+
+const pagoForm = document.getElementById("pagoForm");
+const pagoMessage = document.getElementById("pagoMessage");
+const savePagoButton = document.getElementById("savePagoButton");
+const pagosTable = document.getElementById("pagosTable");
+
+function actualizarSelectorSocios() {
+  const selector = document.getElementById("pagoSocio");
+  const seleccionado = selector.value;
+  selector.innerHTML = '<option value="">Selecciona un socio</option>';
+
+  sociosCache
+    .filter(s => s.estado !== "inactivo")
+    .sort((a,b) => Number(a.numeroSocio || 0) - Number(b.numeroSocio || 0))
+    .forEach(socio => {
+      const opcion = document.createElement("option");
+      opcion.value = socio.id;
+      opcion.textContent = `${socio.numeroSocio} - ${socio.nombre} ${socio.apellidos}`;
+      selector.appendChild(opcion);
+    });
+
+  if (sociosCache.some(s => s.id === seleccionado))
+    selector.value = seleccionado;
+}
+
+async function cargarPagos() {
+  if (!esAdministrador) return;
+  pagosTable.innerHTML = '<tr><td colspan="7">Cargando pagos...</td></tr>';
+
+  try {
+    const resultado = await getDocs(collection(db,"pagos"));
+    pagosCache = resultado.docs.map(documento => ({
+      id:documento.id, ...documento.data()
+    }));
+    pagosCache.sort((a,b) => String(b.fechaPago || "").localeCompare(String(a.fechaPago || "")));
+    mostrarPagos();
+  } catch (error) {
+    console.error(error);
+    pagosTable.innerHTML = '<tr><td colspan="7">No se han podido cargar los pagos.</td></tr>';
+    pagoMessage.textContent = "La colección pagos necesita permisos de lectura.";
+  }
+}
+
+function mostrarPagos() {
+  const busqueda = valor("buscarPagos").trim().toLowerCase();
+  const filtrados = pagosCache.filter(p => [
+    p.numeroSocio,p.nombreSocio,p.periodo,p.formaPago,p.fechaPago
+  ].join(" ").toLowerCase().includes(busqueda));
+
+  const total = pagosCache.reduce((suma,p) => suma + Number(p.importe || 0),0);
+  document.getElementById("totalIngresos").textContent = formatoDinero(total);
+  document.getElementById("numeroPagos").textContent = pagosCache.length;
+
+  pagosTable.innerHTML = "";
+  if (!filtrados.length) {
+    pagosTable.innerHTML = '<tr><td colspan="7">Todavía no hay pagos registrados.</td></tr>';
+  } else {
+    filtrados.forEach(pago => {
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${escapar(pago.fechaPago)}</td>
+        <td>${escapar(pago.numeroSocio)}</td>
+        <td>${escapar(pago.nombreSocio)}</td>
+        <td>${escapar(pago.periodo)}</td>
+        <td>${escapar(formatoDinero(pago.importe))}</td>
+        <td>${escapar(pago.formaPago)}</td>
+        <td><button type="button" class="delete" data-delete-pago="${escapar(pago.id)}">Eliminar</button></td>`;
+      pagosTable.appendChild(fila);
+    });
+  }
+  document.getElementById("totalPagos").textContent =
+    `Pagos registrados: ${pagosCache.length} · Mostrados: ${filtrados.length}`;
+}
+
+document.getElementById("buscarPagos").addEventListener("input",mostrarPagos);
+document.getElementById("fechaPago").value = fechaHoy();
+
+pagoForm.addEventListener("submit",async event => {
+  event.preventDefault();
+  if (!esAdministrador || !auth.currentUser) {
+    pagoMessage.textContent = "No tienes permisos para registrar pagos.";
+    return;
+  }
+
+  const socio = sociosCache.find(s => s.id === valor("pagoSocio"));
+  if (!socio) {
+    pagoMessage.textContent = "Selecciona un socio válido.";
+    return;
+  }
+
+  const importe = Number(valor("importePago"));
+  if (!Number.isFinite(importe) || importe <= 0) {
+    pagoMessage.textContent = "El importe debe ser mayor que cero.";
+    return;
+  }
+
+  const datosPago = {
+    socioId:socio.id,
+    numeroSocio:Number(socio.numeroSocio),
+    nombreSocio:`${socio.nombre} ${socio.apellidos}`,
+    importe:importe,
+    fechaPago:valor("fechaPago"),
+    periodo:valor("periodoPago").trim(),
+    formaPago:valor("metodoPago"),
+    observaciones:valor("observacionesPago").trim(),
+    registradoPor:auth.currentUser.uid
+  };
+
+  if (!datosPago.fechaPago || !datosPago.periodo || !datosPago.formaPago) {
+    pagoMessage.textContent = "Completa todos los campos obligatorios.";
+    return;
+  }
+
+  savePagoButton.disabled = true;
+  pagoMessage.textContent = "Registrando pago...";
+
+  try {
+    await addDoc(collection(db,"pagos"),datosPago);
+    pagoForm.reset();
+    document.getElementById("fechaPago").value = fechaHoy();
+    pagoMessage.textContent = "Pago registrado correctamente.";
+    await cargarPagos();
+  } catch (error) {
+    console.error(error);
+    pagoMessage.textContent = "No se ha podido registrar el pago.";
+  } finally {
+    savePagoButton.disabled = false;
+  }
+});
+
+pagosTable.addEventListener("click",async event => {
+  const boton = event.target.closest("[data-delete-pago]");
+  if (!boton) return;
+
+  const pago = pagosCache.find(p => p.id === boton.dataset.deletePago);
+  if (!pago) return;
+
+  if (!confirm(`¿Eliminar el pago de ${pago.nombreSocio} por ${formatoDinero(pago.importe)}?`))
+    return;
+
+  try {
+    await deleteDoc(doc(db,"pagos",pago.id));
+    pagoMessage.textContent = "Pago eliminado correctamente.";
+    await cargarPagos();
+  } catch (error) {
+    console.error(error);
+    pagoMessage.textContent = "No se ha podido eliminar el pago.";
+  }
+});
+
+/* GESTIÓN DE USUARIOS */
+
+const userForm = document.getElementById("userForm");
+const userMessage = document.getElementById("userMessage");
+const usersTable = document.getElementById("usersTable");
+const saveUserButton = document.getElementById("saveUserButton");
+
+async function cargarUsuarios() {
+  if (!esAdministrador) return;
+
+  usersTable.innerHTML = '<tr><td colspan="5">Cargando usuarios...</td></tr>';
+
+  try {
+    const resultado = await getDocs(collection(db,"users"));
+
+    usuariosCache = resultado.docs.map(documento => ({
+      id:documento.id,
+      ...documento.data()
+    }));
+
+    usuariosCache.sort((a,b) =>
+      String(a.nombre || "").localeCompare(String(b.nombre || ""), "es")
+    );
+
+    mostrarUsuarios();
+
+  } catch (error) {
+    console.error(error);
+    usersTable.innerHTML = '<tr><td colspan="5">No se han podido cargar los usuarios.</td></tr>';
+    userMessage.textContent = "Comprueba las reglas de acceso de Firestore.";
+  }
+}
+
+function mostrarUsuarios() {
+  usersTable.innerHTML = "";
+
+  if (!usuariosCache.length) {
+    usersTable.innerHTML = '<tr><td colspan="5">No hay usuarios registrados.</td></tr>';
+    return;
+  }
+
+  usuariosCache.forEach(usuario => {
+    const esActivo = usuario.activo === true;
+    const esAdmin = usuario.rol === "admin";
+    const esMiCuenta = auth.currentUser && usuario.id === auth.currentUser.uid;
+
+    const fila = document.createElement("tr");
+
+    fila.innerHTML = `
+      <td>${escapar(usuario.nombre || "Sin nombre")}${esMiCuenta ? " (Tú)" : ""}</td>
+      <td>${escapar(usuario.email || "")}</td>
+      <td>
+        <span class="badge ${esAdmin ? "admin" : ""}">
+          ${esAdmin ? "Administrador" : "Socio"}
+        </span>
+      </td>
+      <td>
+        <span class="badge ${esActivo ? "" : "inactive"}">
+          ${esActivo ? "Activo" : "Inactivo"}
+        </span>
+      </td>
+      <td>
+        <button type="button"
+          data-toggle-role="${escapar(usuario.id)}"
+          ${esMiCuenta ? "disabled title='No puedes cambiar tus propios permisos'" : ""}>
+          ${esAdmin ? "Hacer socio" : "Hacer administrador"}
+        </button>
+
+        <button type="button"
+          class="secondary"
+          data-toggle-active="${escapar(usuario.id)}"
+          ${esMiCuenta ? "disabled title='No puedes desactivar tu propia cuenta'" : ""}>
+          ${esActivo ? "Desactivar" : "Activar"}
+        </button>
+      </td>`;
+
+    usersTable.appendChild(fila);
+  });
+}
+
+userForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!esAdministrador || !auth.currentUser) {
+    userMessage.textContent = "No tienes permisos para gestionar usuarios.";
+    return;
+  }
+
+  const uid = valor("userUid").trim();
+  const email = valor("userEmail").trim();
+  const nombre = valor("userName").trim();
+  const rol = valor("userRole");
+
+  if (!uid || !email || !nombre) {
+    userMessage.textContent = "Completa todos los campos.";
+    return;
+  }
+
+  if (uid === auth.currentUser.uid) {
+    userMessage.textContent = "Este es tu propio UID. Ya tienes un perfil.";
+    return;
+  }
+
+  if (usuariosCache.some(u => u.id === uid)) {
+    userMessage.textContent = "Ya existe un perfil con ese UID.";
+    return;
+  }
+
+  saveUserButton.disabled = true;
+  userMessage.textContent = "Creando perfil...";
+
+  try {
+    await setDoc(doc(db,"users",uid),{
+      email:email,
+      nombre:nombre,
+      rol:rol,
+      activo:true
+    });
+
+    userForm.reset();
+    userMessage.textContent = "Perfil creado correctamente. El usuario ya puede iniciar sesión si su cuenta de Authentication existe.";
+
+    await cargarUsuarios();
+
+  } catch (error) {
+    console.error(error);
+    userMessage.textContent = "No se ha podido crear el perfil. Comprueba el UID y los permisos.";
+  } finally {
+    saveUserButton.disabled = false;
+  }
+});
+
+usersTable.addEventListener("click", async event => {
+  const botonRol = event.target.closest("[data-toggle-role]");
+  const botonActivo = event.target.closest("[data-toggle-active]");
+
+  if (!esAdministrador || !auth.currentUser) {
+    userMessage.textContent = "No tienes permisos para esta operación.";
+    return;
+  }
+
+  if (botonRol) {
+    const usuario = usuariosCache.find(u => u.id === botonRol.dataset.toggleRole);
+    if (!usuario) return;
+
+    if (usuario.id === auth.currentUser.uid) {
+      userMessage.textContent = "No puedes modificar tus propios permisos.";
+      return;
+    }
+
+    const nuevoRol = usuario.rol === "admin" ? "socio" : "admin";
+
+    if (usuario.rol === "admin" && nuevoRol === "socio") {
+      const administradoresActivos = usuariosCache.filter(
+        u => u.rol === "admin" && u.activo === true
+      ).length;
+
+      if (usuario.activo === true && administradoresActivos <= 1) {
+        userMessage.textContent = "No puedes quitar los permisos al último administrador activo.";
+        return;
+      }
+    }
+
+    const accion = nuevoRol === "admin"
+      ? "convertir en administrador"
+      : "cambiar a socio";
+
+    if (!confirm(`¿Quieres ${accion} a ${usuario.nombre || usuario.email}?`))
+      return;
+
+    try {
+      await updateDoc(doc(db,"users",usuario.id),{
+        rol:nuevoRol
+      });
+
+      userMessage.textContent = "Permisos actualizados correctamente.";
+      await cargarUsuarios();
+
+    } catch (error) {
+      console.error(error);
+      userMessage.textContent = "No se han podido modificar los permisos.";
+    }
+  }
+
+  if (botonActivo) {
+    const usuario = usuariosCache.find(u => u.id === botonActivo.dataset.toggleActive);
+    if (!usuario) return;
+
+    if (usuario.id === auth.currentUser.uid) {
+      userMessage.textContent = "No puedes desactivar tu propia cuenta.";
+      return;
+    }
+
+    const nuevoEstado = usuario.activo !== true;
+
+    if (!nuevoEstado && usuario.rol === "admin") {
+      const administradoresActivos = usuariosCache.filter(
+        u => u.rol === "admin" && u.activo === true
+      ).length;
+
+      if (administradoresActivos <= 1) {
+        userMessage.textContent = "No puedes desactivar al último administrador activo.";
+        return;
+      }
+    }
+
+    const accion = nuevoEstado ? "activar" : "desactivar";
+
+    if (!confirm(`¿Quieres ${accion} el acceso de ${usuario.nombre || usuario.email}?`))
+      return;
+
+    try {
+      await updateDoc(doc(db,"users",usuario.id),{
+        activo:nuevoEstado
+      });
+
+      userMessage.textContent = nuevoEstado
+        ? "Usuario activado correctamente."
+        : "Usuario desactivado correctamente.";
+
+      await cargarUsuarios();
+
+    } catch (error) {
+      console.error(error);
+      userMessage.textContent = "No se ha podido cambiar el estado del usuario.";
+    }
+  }
+});
+
+/* COMPROBACIÓN DEL ACCESO */
+
+onAuthStateChanged(auth,async user => {
+  if (!user) {
+    esAdministrador = false;
+    sociosCache = [];
+    pagosCache = [];
+    usuariosCache = [];
+    showLogin();
+    return;
+  }
+
+  try {
+    const profileSnap = await getDoc(doc(db,"users",user.uid));
+
+    if (!profileSnap.exists() || profileSnap.data().activo !== true) {
+      await signOut(auth);
+      showLogin("Tu cuenta no está activa o todavía no ha sido autorizada.");
+      return;
+    }
+
+    const profile = profileSnap.data();
+    showMember(profile);
+
+    if (profile.rol === "admin") {
+      limpiarFormulario();
+      await cargarSocios();
+      await cargarPagos();
+      await cargarUsuarios();
+    }
+
+  } catch (error) {
+    console.error("Error al consultar el perfil:",error);
+    await signOut(auth);
+    showLogin("No se ha podido verificar tu cuenta. Inténtalo de nuevo.");
+  }
+});
+
+console.log("Firebase conectado correctamente");
+</script>
+</body>
+</html>
