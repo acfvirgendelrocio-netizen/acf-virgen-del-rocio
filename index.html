@@ -71,6 +71,8 @@ footer{background:#241b1b;color:#eee;text-align:center;padding:28px 15px;font-si
 .event-meta{font-size:14px;color:#75635d;margin:5px 0}
 .event-category{display:inline-block;background:#f2e4bd;color:#674900;padding:4px 9px;border-radius:20px;font-size:12px}
 .event-description{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px}
+.past-events-section{margin-top:35px}
+.past-events-section .event-card{opacity:.82;border-top-color:#b9a98d}
 @media(max-width:600px){
 header{justify-content:center;text-align:center}
 nav{justify-content:center}
@@ -114,10 +116,16 @@ nav{justify-content:center}
 </section>
 
 <section id="calendario">
-  <h2>Calendario de actividades y eventos</h2>
+  <h2>Próximas actividades y eventos</h2>
   <p>Consulta las próximas citas de nuestra asociación.</p>
   <div id="eventList" class="event-list">
     <p style="text-align:center">Cargando calendario...</p>
+  </div>
+  <div id="pastEventsSection" class="past-events-section" hidden>
+    <hr>
+    <h2>Archivo de actividades anteriores</h2>
+    <p>Consulta los eventos que ya se han celebrado.</p>
+    <div id="pastEventList" class="event-list"></div>
   </div>
   <p id="eventPublicMessage" class="message" role="status"></p>
 </section>
@@ -1397,6 +1405,8 @@ const eventAdminMessage = document.getElementById("eventAdminMessage");
 const eventsAdminTable = document.getElementById("eventsAdminTable");
 const saveEventButton = document.getElementById("saveEventButton");
 const eventList = document.getElementById("eventList");
+const pastEventList = document.getElementById("pastEventList");
+const pastEventsSection = document.getElementById("pastEventsSection");
 let eventosCache = [];
 
 function limpiarFormularioEventos() {
@@ -1411,24 +1421,37 @@ function limpiarFormularioEventos() {
 
 document.getElementById("cancelEventEditButton").addEventListener("click", limpiarFormularioEventos);
 
+function crearTarjetaEvento(evento) {
+  const tarjeta = document.createElement("article");
+  tarjeta.className = "event-card";
+  const fecha = evento.fecha ? new Date(evento.fecha + "T00:00:00").toLocaleDateString("es-ES") : "";
+  const detalles = [fecha, evento.hora || "", evento.lugar || ""].filter(Boolean).map(escapar).join(" · ");
+  tarjeta.innerHTML = `
+    <span class="event-category">${escapar(evento.categoria || "Actividad")}</span>
+    <h3>${escapar(evento.titulo || "Sin título")}</h3>
+    <p class="event-meta">${detalles}</p>
+    <div class="event-description">${escapar(evento.descripcion || "")}</div>`;
+  return tarjeta;
+}
+
 function mostrarEventosPublicos(eventos) {
   eventList.innerHTML = "";
-  if (!eventos.length) {
-    eventList.innerHTML = '<p style="text-align:center">Todavía no hay eventos publicados.</p>';
-    return;
+  pastEventList.innerHTML = "";
+  const hoy = fechaHoy();
+  const proximos = eventos.filter(evento => !evento.fecha || evento.fecha >= hoy);
+  const anteriores = eventos.filter(evento => evento.fecha && evento.fecha < hoy);
+
+  if (!proximos.length) {
+    eventList.innerHTML = '<p style="text-align:center">No hay próximos eventos publicados.</p>';
+  } else {
+    proximos.forEach(evento => eventList.appendChild(crearTarjetaEvento(evento)));
   }
-  eventos.forEach(evento => {
-    const tarjeta = document.createElement("article");
-    tarjeta.className = "event-card";
-    const fecha = evento.fecha ? new Date(evento.fecha + "T00:00:00").toLocaleDateString("es-ES") : "";
-    const detalles = [fecha, evento.hora || "", evento.lugar || ""].filter(Boolean).map(escapar).join(" · ");
-    tarjeta.innerHTML = `
-      <span class="event-category">${escapar(evento.categoria || "Actividad")}</span>
-      <h3>${escapar(evento.titulo || "Sin título")}</h3>
-      <p class="event-meta">${detalles}</p>
-      <div class="event-description">${escapar(evento.descripcion || "")}</div>`;
-    eventList.appendChild(tarjeta);
-  });
+
+  pastEventsSection.hidden = anteriores.length === 0;
+  if (anteriores.length) {
+    anteriores.sort((a,b) => String(b.fecha || "").localeCompare(String(a.fecha || "")) || String(b.hora || "").localeCompare(String(a.hora || "")));
+    anteriores.forEach(evento => pastEventList.appendChild(crearTarjetaEvento(evento)));
+  }
 }
 
 async function cargarEventosPublicos() {
@@ -1471,12 +1494,14 @@ function mostrarEventosAdmin() {
   eventosCache.forEach(evento => {
     const fila = document.createElement("tr");
     const publicada = evento.estado === "publicada";
+    const archivado = publicada && evento.fecha && evento.fecha < fechaHoy();
+    const textoEstado = archivado ? "Archivado automáticamente" : (publicada ? "Publicado" : "Borrador");
     fila.innerHTML = `
       <td>${escapar(evento.fecha || "")}</td>
       <td>${escapar(evento.hora || "")}</td>
       <td>${escapar(evento.titulo || "Sin título")}<br><small>${escapar(evento.categoria || "")}</small></td>
       <td>${escapar(evento.lugar || "")}</td>
-      <td><span class="badge ${publicada ? "admin" : "inactive"}">${publicada ? "Publicado" : "Borrador"}</span></td>
+      <td><span class="badge ${publicada ? "admin" : "inactive"}">${escapar(textoEstado)}</span></td>
       <td>
         <button type="button" data-edit-event="${escapar(evento.id)}">Editar</button>
         <button type="button" class="delete" data-delete-event="${escapar(evento.id)}">Eliminar</button>
