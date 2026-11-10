@@ -101,6 +101,14 @@ nav{justify-content:center}
 .hero-actions{width:100%;max-width:340px;flex-direction:column}
 .hero-actions .button{width:100%}
 }
+
+.faq-list details{border-bottom:1px solid #e2d5c8;padding:16px 4px}
+.faq-list details:last-child{border-bottom:0}
+.faq-list summary{cursor:pointer;color:#5b1022;font-weight:700;line-height:1.5;list-style:none;position:relative;padding-right:30px}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list summary:after{content:"+";position:absolute;right:4px;top:0;color:#9a7434;font-size:22px;font-weight:400}
+.faq-list details[open] summary:after{content:"−"}
+.faq-list details p{margin:12px 0 2px;line-height:1.7;color:#514744}
 </style>
 </head>
 
@@ -113,6 +121,7 @@ nav{justify-content:center}
     <a href="#actividades">Actividades</a>
     <a href="#calendario">Calendario</a>
     <a href="#noticias">Noticias</a>
+    <a href="#preguntas-frecuentes">FAQ</a>
     <a href="#hazte-socio">Hazte socio</a>
     <a href="#contacto">Contacto</a>
     <a href="#socios">Socios</a>
@@ -185,6 +194,42 @@ nav{justify-content:center}
     <p style="text-align:center">Cargando noticias...</p>
   </div>
   <p id="newsPublicMessage" class="message" role="status"></p>
+</section>
+
+
+<section id="preguntas-frecuentes" class="home-intro">
+  <h2>Preguntas frecuentes</h2>
+  <p class="intro-copy">Resolvemos algunas dudas habituales sobre la asociación y cómo participar en ella.</p>
+  <div class="panel faq-list" style="max-width:850px;text-align:left">
+    <details>
+      <summary>¿Qué es la A.C.F. Virgen del Rocío de Valmojado?</summary>
+      <p>Somos una asociación cultural dedicada a mantener viva la cultura flamenca y a crear un espacio para compartir, aprender y disfrutar de nuestras tradiciones.</p>
+    </details>
+    <details>
+      <summary>¿Cómo puedo hacerme socio o socia?</summary>
+      <p>Accede al apartado «Hazte socio» de esta web y completa el formulario. La asociación revisará tu solicitud y se pondrá en contacto contigo para informarte de los siguientes pasos. Enviar la solicitud no crea automáticamente un alta de socio.</p>
+    </details>
+    <details>
+      <summary>¿Cuánto cuesta la cuota de socio?</summary>
+      <p>La cuota anual está pendiente de aprobación definitiva. En el formulario de inscripción encontrarás la orientación económica disponible; la asociación confirmará el importe definitivo al contactar contigo.</p>
+    </details>
+    <details>
+      <summary>¿Cómo puedo saber qué actividades se organizan?</summary>
+      <p>Consulta el apartado «Calendario» para ver las próximas actividades y el archivo de eventos anteriores. También publicaremos avisos y novedades en «Noticias».</p>
+    </details>
+    <details>
+      <summary>¿Las actividades están abiertas a todo el mundo?</summary>
+      <p>Las condiciones de participación pueden variar según cada actividad. Consulta la información publicada en el calendario o ponte en contacto con la asociación para confirmar los detalles.</p>
+    </details>
+    <details>
+      <summary>¿Cómo puedo contactar con la asociación?</summary>
+      <p>Puedes escribirnos a <a href="mailto:acfvirgendelrocio@gmail.com">acfvirgendelrocio@gmail.com</a> desde el apartado «Contacto».</p>
+    </details>
+    <details>
+      <summary>¿Cómo accedo a la zona privada de socios?</summary>
+      <p>La zona privada está destinada a los socios que dispongan de una cuenta de acceso activa. Si necesitas ayuda con tus credenciales, contacta con la asociación por correo electrónico.</p>
+    </details>
+  </div>
 </section>
 
 <section id="hazte-socio" class="home-intro">
