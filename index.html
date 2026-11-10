@@ -57,6 +57,20 @@ td button.secondary{background:#75635d}
 .stat span{font-size:13px;color:#75635d}
 hr{margin:30px 0;border:0;border-top:1px solid #e2d5c8}
 footer{background:#241b1b;color:#eee;text-align:center;padding:28px 15px;font-size:13px}
+
+.news-list{max-width:1050px;margin:30px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;text-align:left}
+.news-card{background:#fff;border:1px solid #e2d5c8;border-top:4px solid #5b1022;border-radius:7px;padding:22px;box-shadow:0 5px 20px #0000000c}
+.news-card h3{color:#5b1022;margin:10px 0;font-size:22px}
+.news-meta{font-size:13px;color:#75635d}
+.news-category{display:inline-block;background:#f2e4bd;color:#674900;padding:4px 9px;border-radius:20px;font-size:12px}
+.news-body{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px}
+.news-admin-table td{vertical-align:top}
+.event-list{max-width:1050px;margin:30px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;text-align:left}
+.event-card{background:#fff;border:1px solid #e2d5c8;border-top:4px solid #a17a32;border-radius:7px;padding:22px;box-shadow:0 5px 20px #0000000c}
+.event-card h3{color:#5b1022;margin:10px 0;font-size:22px}
+.event-meta{font-size:14px;color:#75635d;margin:5px 0}
+.event-category{display:inline-block;background:#f2e4bd;color:#674900;padding:4px 9px;border-radius:20px;font-size:12px}
+.event-description{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px}
 @media(max-width:600px){
 header{justify-content:center;text-align:center}
 nav{justify-content:center}
@@ -74,6 +88,8 @@ nav{justify-content:center}
     <a href="#inicio">Inicio</a>
     <a href="#asociacion">La asociación</a>
     <a href="#actividades">Actividades</a>
+    <a href="#calendario">Calendario</a>
+    <a href="#noticias">Noticias</a>
     <a href="#socios">Socios</a>
   </nav>
 </header>
@@ -94,7 +110,26 @@ nav{justify-content:center}
 
 <section id="actividades">
   <h2>Actividades y eventos</h2>
-  <p>Próximamente podrás consultar aquí nuestras actividades, actuaciones, celebraciones y eventos culturales.</p>
+  <p>En nuestra asociación compartimos actividades, actuaciones, celebraciones y encuentros culturales.</p>
+</section>
+
+<section id="calendario">
+  <h2>Calendario de actividades y eventos</h2>
+  <p>Consulta las próximas citas de nuestra asociación.</p>
+  <div id="eventList" class="event-list">
+    <p style="text-align:center">Cargando calendario...</p>
+  </div>
+  <p id="eventPublicMessage" class="message" role="status"></p>
+</section>
+
+
+<section id="noticias">
+  <h2>Noticias y actualidad</h2>
+  <p>Consulta las noticias, comunicados, eventos y actividades de nuestra asociación.</p>
+  <div id="newsList" class="news-list">
+    <p style="text-align:center">Cargando noticias...</p>
+  </div>
+  <p id="newsPublicMessage" class="message" role="status"></p>
 </section>
 
 <section class="private" id="socios">
@@ -372,6 +407,125 @@ nav{justify-content:center}
         </table>
       </div>
 
+      <hr>
+      <!-- GESTIÓN DE NOTICIAS -->
+      <h3>Gestión de noticias y actualidad</h3>
+      <p style="text-align:center">Crea noticias, edítalas, publícalas o guárdalas como borrador.</p>
+
+      <form id="newsForm">
+        <input type="hidden" id="newsId">
+        <div class="form-grid">
+          <div class="full">
+            <label for="newsTitle">Título</label>
+            <input id="newsTitle" type="text" maxlength="180" required>
+          </div>
+          <div>
+            <label for="newsCategory">Categoría</label>
+            <select id="newsCategory" required>
+              <option value="Noticias">Noticias</option>
+              <option value="Eventos">Eventos</option>
+              <option value="Comunicados">Comunicados</option>
+              <option value="Actividades">Actividades</option>
+            </select>
+          </div>
+          <div>
+            <label for="newsDate">Fecha</label>
+            <input id="newsDate" type="date" required>
+          </div>
+          <div class="full">
+            <label for="newsText">Texto de la noticia</label>
+            <textarea id="newsText" rows="7" required></textarea>
+          </div>
+          <div class="full">
+            <label for="newsStatus">Estado</label>
+            <select id="newsStatus" required>
+              <option value="borrador">Borrador (no visible al público)</option>
+              <option value="publicada">Publicada (visible al público)</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="button" type="submit" id="saveNewsButton">Guardar noticia</button>
+          <button class="button secondary" type="button" id="cancelNewsEditButton">Limpiar formulario</button>
+        </div>
+      </form>
+      <p id="newsAdminMessage" class="message" role="status"></p>
+
+      <div class="table-wrap">
+        <table class="news-admin-table">
+          <thead>
+            <tr><th>Fecha</th><th>Título</th><th>Categoría</th><th>Estado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="newsAdminTable">
+            <tr><td colspan="5">Cargando noticias...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+      <!-- GESTIÓN DEL CALENDARIO -->
+      <h3>Gestión de actividades y eventos</h3>
+      <p style="text-align:center">Añade eventos al calendario, edítalos, publícalos o guárdalos como borrador.</p>
+
+      <form id="eventForm">
+        <input type="hidden" id="eventId">
+        <div class="form-grid">
+          <div class="full">
+            <label for="eventTitle">Título del evento</label>
+            <input id="eventTitle" type="text" maxlength="180" required>
+          </div>
+          <div>
+            <label for="eventDate">Fecha</label>
+            <input id="eventDate" type="date" required>
+          </div>
+          <div>
+            <label for="eventTime">Hora</label>
+            <input id="eventTime" type="time">
+          </div>
+          <div>
+            <label for="eventPlace">Lugar</label>
+            <input id="eventPlace" type="text" maxlength="180" placeholder="Lugar de celebración">
+          </div>
+          <div>
+            <label for="eventCategory">Categoría</label>
+            <select id="eventCategory" required>
+              <option value="Actuación">Actuación</option>
+              <option value="Convivencia">Convivencia</option>
+              <option value="Excursión">Excursión</option>
+              <option value="Celebración">Celebración</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="eventDescription">Descripción</label>
+            <textarea id="eventDescription" rows="5"></textarea>
+          </div>
+          <div class="full">
+            <label for="eventStatus">Estado</label>
+            <select id="eventStatus" required>
+              <option value="borrador">Borrador (no visible al público)</option>
+              <option value="publicada">Publicado (visible al público)</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="button" type="submit" id="saveEventButton">Guardar evento</button>
+          <button class="button secondary" type="button" id="cancelEventEditButton">Limpiar formulario</button>
+        </div>
+      </form>
+      <p id="eventAdminMessage" class="message" role="status"></p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Fecha</th><th>Hora</th><th>Evento</th><th>Lugar</th><th>Estado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="eventsAdminTable">
+            <tr><td colspan="6">Cargando eventos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
 
     <div id="memberInfo">
@@ -396,7 +550,7 @@ import {
 
 import {
   getFirestore, doc, getDoc, collection, getDocs,
-  addDoc, updateDoc, deleteDoc, setDoc
+  addDoc, updateDoc, deleteDoc, setDoc, query, where
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1063,6 +1217,355 @@ usersTable.addEventListener("click", async event => {
   }
 });
 
+
+/* GESTIÓN DE NOTICIAS Y ACTUALIDAD */
+
+const newsForm = document.getElementById("newsForm");
+const newsAdminMessage = document.getElementById("newsAdminMessage");
+const newsAdminTable = document.getElementById("newsAdminTable");
+const saveNewsButton = document.getElementById("saveNewsButton");
+const newsList = document.getElementById("newsList");
+let noticiasCache = [];
+
+function limpiarFormularioNoticias() {
+  newsForm.reset();
+  ponerValor("newsId", "");
+  ponerValor("newsDate", fechaHoy());
+  ponerValor("newsCategory", "Noticias");
+  ponerValor("newsStatus", "borrador");
+  saveNewsButton.textContent = "Guardar noticia";
+  newsAdminMessage.textContent = "";
+}
+
+document.getElementById("cancelNewsEditButton").addEventListener("click", limpiarFormularioNoticias);
+
+function mostrarNoticiasPublicas(noticias) {
+  newsList.innerHTML = "";
+  if (!noticias.length) {
+    newsList.innerHTML = '<p style="text-align:center">Todavía no hay noticias publicadas.</p>';
+    return;
+  }
+  noticias.forEach(noticia => {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "news-card";
+    tarjeta.innerHTML = `
+      <span class="news-category">${escapar(noticia.categoria || "Noticias")}</span>
+      <h3>${escapar(noticia.titulo || "Sin título")}</h3>
+      <p class="news-meta">${escapar(noticia.fecha || "")}</p>
+      <div class="news-body">${escapar(noticia.texto || "")}</div>`;
+    newsList.appendChild(tarjeta);
+  });
+}
+
+async function cargarNoticiasPublicas() {
+  newsList.innerHTML = '<p style="text-align:center">Cargando noticias...</p>';
+  try {
+    const resultado = await getDocs(query(
+      collection(db, "noticias"),
+      where("estado", "==", "publicada")
+    ));
+    const noticias = resultado.docs.map(documento => ({
+      id: documento.id, ...documento.data()
+    }));
+    noticias.sort((a,b) => String(b.fecha || "").localeCompare(String(a.fecha || "")));
+    mostrarNoticiasPublicas(noticias);
+  } catch (error) {
+    console.error("Error cargando noticias públicas:", error);
+    newsList.innerHTML = '<p style="text-align:center">No se han podido cargar las noticias. Comprueba las reglas de Firestore.</p>';
+  }
+}
+
+async function cargarNoticiasAdmin() {
+  if (!esAdministrador) return;
+  newsAdminTable.innerHTML = '<tr><td colspan="5">Cargando noticias...</td></tr>';
+  try {
+    const resultado = await getDocs(collection(db, "noticias"));
+    noticiasCache = resultado.docs.map(documento => ({
+      id: documento.id, ...documento.data()
+    }));
+    noticiasCache.sort((a,b) => String(b.fecha || "").localeCompare(String(a.fecha || "")));
+    mostrarNoticiasAdmin();
+  } catch (error) {
+    console.error("Error cargando noticias para administración:", error);
+    newsAdminTable.innerHTML = '<tr><td colspan="5">No se han podido cargar las noticias.</td></tr>';
+    newsAdminMessage.textContent = "Comprueba las reglas de acceso de Firestore.";
+  }
+}
+
+function mostrarNoticiasAdmin() {
+  newsAdminTable.innerHTML = "";
+  if (!noticiasCache.length) {
+    newsAdminTable.innerHTML = '<tr><td colspan="5">Todavía no hay noticias.</td></tr>';
+    return;
+  }
+  noticiasCache.forEach(noticia => {
+    const fila = document.createElement("tr");
+    const publicada = noticia.estado === "publicada";
+    fila.innerHTML = `
+      <td>${escapar(noticia.fecha || "")}</td>
+      <td>${escapar(noticia.titulo || "Sin título")}</td>
+      <td>${escapar(noticia.categoria || "")}</td>
+      <td><span class="badge ${publicada ? "admin" : "inactive"}">${publicada ? "Publicada" : "Borrador"}</span></td>
+      <td>
+        <button type="button" data-edit-news="${escapar(noticia.id)}">Editar</button>
+        <button type="button" class="delete" data-delete-news="${escapar(noticia.id)}">Eliminar</button>
+      </td>`;
+    newsAdminTable.appendChild(fila);
+  });
+}
+
+newsForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!esAdministrador || !auth.currentUser) {
+    newsAdminMessage.textContent = "No tienes permisos para gestionar noticias.";
+    return;
+  }
+  const id = valor("newsId");
+  const datos = {
+    titulo: valor("newsTitle").trim(),
+    texto: valor("newsText").trim(),
+    fecha: valor("newsDate"),
+    categoria: valor("newsCategory"),
+    estado: valor("newsStatus"),
+    actualizadoPor: auth.currentUser.uid,
+    actualizadoEn: new Date().toISOString()
+  };
+  if (!datos.titulo || !datos.texto || !datos.fecha) {
+    newsAdminMessage.textContent = "Completa el título, el texto y la fecha.";
+    return;
+  }
+  saveNewsButton.disabled = true;
+  newsAdminMessage.textContent = "Guardando noticia...";
+  try {
+    if (id) {
+      await updateDoc(doc(db, "noticias", id), datos);
+      newsAdminMessage.textContent = "Noticia actualizada correctamente.";
+    } else {
+      datos.creadoPor = auth.currentUser.uid;
+      datos.creadoEn = new Date().toISOString();
+      await addDoc(collection(db, "noticias"), datos);
+      newsAdminMessage.textContent = "Noticia creada correctamente.";
+    }
+    limpiarFormularioNoticias();
+    await cargarNoticiasAdmin();
+    await cargarNoticiasPublicas();
+  } catch (error) {
+    console.error(error);
+    newsAdminMessage.textContent = "No se ha podido guardar la noticia. Comprueba los permisos de Firestore.";
+  } finally {
+    saveNewsButton.disabled = false;
+  }
+});
+
+newsAdminTable.addEventListener("click", async event => {
+  const botonEditar = event.target.closest("[data-edit-news]");
+  const botonEliminar = event.target.closest("[data-delete-news]");
+  if (botonEditar) {
+    const noticia = noticiasCache.find(n => n.id === botonEditar.dataset.editNews);
+    if (!noticia) return;
+    ponerValor("newsId", noticia.id);
+    ponerValor("newsTitle", noticia.titulo);
+    ponerValor("newsText", noticia.texto);
+    ponerValor("newsDate", noticia.fecha || fechaHoy());
+    ponerValor("newsCategory", noticia.categoria || "Noticias");
+    ponerValor("newsStatus", noticia.estado || "borrador");
+    saveNewsButton.textContent = "Actualizar noticia";
+    newsAdminMessage.textContent = "Editando: " + (noticia.titulo || "noticia");
+    newsForm.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  if (botonEliminar) {
+    const noticia = noticiasCache.find(n => n.id === botonEliminar.dataset.deleteNews);
+    if (!noticia) return;
+    if (!confirm(`¿Seguro que quieres eliminar la noticia "${noticia.titulo || "Sin título"}"?`)) return;
+    try {
+      await deleteDoc(doc(db, "noticias", noticia.id));
+      newsAdminMessage.textContent = "Noticia eliminada correctamente.";
+      await cargarNoticiasAdmin();
+      await cargarNoticiasPublicas();
+    } catch (error) {
+      console.error(error);
+      newsAdminMessage.textContent = "No se ha podido eliminar la noticia.";
+    }
+  }
+});
+
+ponerValor("newsDate", fechaHoy());
+
+/* GESTIÓN DEL CALENDARIO DE ACTIVIDADES Y EVENTOS */
+const eventForm = document.getElementById("eventForm");
+const eventAdminMessage = document.getElementById("eventAdminMessage");
+const eventsAdminTable = document.getElementById("eventsAdminTable");
+const saveEventButton = document.getElementById("saveEventButton");
+const eventList = document.getElementById("eventList");
+let eventosCache = [];
+
+function limpiarFormularioEventos() {
+  eventForm.reset();
+  ponerValor("eventId", "");
+  ponerValor("eventDate", fechaHoy());
+  ponerValor("eventCategory", "Actuación");
+  ponerValor("eventStatus", "borrador");
+  saveEventButton.textContent = "Guardar evento";
+  eventAdminMessage.textContent = "";
+}
+
+document.getElementById("cancelEventEditButton").addEventListener("click", limpiarFormularioEventos);
+
+function mostrarEventosPublicos(eventos) {
+  eventList.innerHTML = "";
+  if (!eventos.length) {
+    eventList.innerHTML = '<p style="text-align:center">Todavía no hay eventos publicados.</p>';
+    return;
+  }
+  eventos.forEach(evento => {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "event-card";
+    const fecha = evento.fecha ? new Date(evento.fecha + "T00:00:00").toLocaleDateString("es-ES") : "";
+    const detalles = [fecha, evento.hora || "", evento.lugar || ""].filter(Boolean).map(escapar).join(" · ");
+    tarjeta.innerHTML = `
+      <span class="event-category">${escapar(evento.categoria || "Actividad")}</span>
+      <h3>${escapar(evento.titulo || "Sin título")}</h3>
+      <p class="event-meta">${detalles}</p>
+      <div class="event-description">${escapar(evento.descripcion || "")}</div>`;
+    eventList.appendChild(tarjeta);
+  });
+}
+
+async function cargarEventosPublicos() {
+  eventList.innerHTML = '<p style="text-align:center">Cargando calendario...</p>';
+  try {
+    const resultado = await getDocs(query(
+      collection(db, "eventos"),
+      where("estado", "==", "publicada")
+    ));
+    const eventos = resultado.docs.map(documento => ({id:documento.id, ...documento.data()}));
+    eventos.sort((a,b) => String(a.fecha || "").localeCompare(String(b.fecha || "")) || String(a.hora || "").localeCompare(String(b.hora || "")));
+    mostrarEventosPublicos(eventos);
+  } catch (error) {
+    console.error("Error cargando eventos públicos:", error);
+    eventList.innerHTML = '<p style="text-align:center">No se ha podido cargar el calendario. Comprueba las reglas de Firestore.</p>';
+  }
+}
+
+async function cargarEventosAdmin() {
+  if (!esAdministrador) return;
+  eventsAdminTable.innerHTML = '<tr><td colspan="6">Cargando eventos...</td></tr>';
+  try {
+    const resultado = await getDocs(collection(db, "eventos"));
+    eventosCache = resultado.docs.map(documento => ({id:documento.id, ...documento.data()}));
+    eventosCache.sort((a,b) => String(a.fecha || "").localeCompare(String(b.fecha || "")) || String(a.hora || "").localeCompare(String(b.hora || "")));
+    mostrarEventosAdmin();
+  } catch (error) {
+    console.error("Error cargando eventos para administración:", error);
+    eventsAdminTable.innerHTML = '<tr><td colspan="6">No se han podido cargar los eventos.</td></tr>';
+    eventAdminMessage.textContent = "Comprueba las reglas de acceso de Firestore.";
+  }
+}
+
+function mostrarEventosAdmin() {
+  eventsAdminTable.innerHTML = "";
+  if (!eventosCache.length) {
+    eventsAdminTable.innerHTML = '<tr><td colspan="6">Todavía no hay eventos.</td></tr>';
+    return;
+  }
+  eventosCache.forEach(evento => {
+    const fila = document.createElement("tr");
+    const publicada = evento.estado === "publicada";
+    fila.innerHTML = `
+      <td>${escapar(evento.fecha || "")}</td>
+      <td>${escapar(evento.hora || "")}</td>
+      <td>${escapar(evento.titulo || "Sin título")}<br><small>${escapar(evento.categoria || "")}</small></td>
+      <td>${escapar(evento.lugar || "")}</td>
+      <td><span class="badge ${publicada ? "admin" : "inactive"}">${publicada ? "Publicado" : "Borrador"}</span></td>
+      <td>
+        <button type="button" data-edit-event="${escapar(evento.id)}">Editar</button>
+        <button type="button" class="delete" data-delete-event="${escapar(evento.id)}">Eliminar</button>
+      </td>`;
+    eventsAdminTable.appendChild(fila);
+  });
+}
+
+eventForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!esAdministrador || !auth.currentUser) {
+    eventAdminMessage.textContent = "No tienes permisos para gestionar eventos.";
+    return;
+  }
+  const id = valor("eventId");
+  const datos = {
+    titulo:valor("eventTitle").trim(),
+    fecha:valor("eventDate"),
+    hora:valor("eventTime"),
+    lugar:valor("eventPlace").trim(),
+    categoria:valor("eventCategory"),
+    descripcion:valor("eventDescription").trim(),
+    estado:valor("eventStatus"),
+    actualizadoPor:auth.currentUser.uid,
+    actualizadoEn:new Date().toISOString()
+  };
+  if (!datos.titulo || !datos.fecha) {
+    eventAdminMessage.textContent = "Completa el título y la fecha del evento.";
+    return;
+  }
+  saveEventButton.disabled = true;
+  eventAdminMessage.textContent = "Guardando evento...";
+  try {
+    if (id) {
+      await updateDoc(doc(db, "eventos", id), datos);
+      eventAdminMessage.textContent = "Evento actualizado correctamente.";
+    } else {
+      datos.creadoPor = auth.currentUser.uid;
+      datos.creadoEn = new Date().toISOString();
+      await addDoc(collection(db, "eventos"), datos);
+      eventAdminMessage.textContent = "Evento creado correctamente.";
+    }
+    limpiarFormularioEventos();
+    await cargarEventosAdmin();
+    await cargarEventosPublicos();
+  } catch (error) {
+    console.error(error);
+    eventAdminMessage.textContent = "No se ha podido guardar el evento. Comprueba los permisos de Firestore.";
+  } finally {
+    saveEventButton.disabled = false;
+  }
+});
+
+eventsAdminTable.addEventListener("click", async event => {
+  const botonEditar = event.target.closest("[data-edit-event]");
+  const botonEliminar = event.target.closest("[data-delete-event]");
+  if (botonEditar) {
+    const evento = eventosCache.find(e => e.id === botonEditar.dataset.editEvent);
+    if (!evento) return;
+    ponerValor("eventId", evento.id);
+    ponerValor("eventTitle", evento.titulo);
+    ponerValor("eventDate", evento.fecha || fechaHoy());
+    ponerValor("eventTime", evento.hora);
+    ponerValor("eventPlace", evento.lugar);
+    ponerValor("eventCategory", evento.categoria || "Otros");
+    ponerValor("eventDescription", evento.descripcion);
+    ponerValor("eventStatus", evento.estado || "borrador");
+    saveEventButton.textContent = "Actualizar evento";
+    eventAdminMessage.textContent = "Editando: " + (evento.titulo || "evento");
+    eventForm.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  if (botonEliminar) {
+    const evento = eventosCache.find(e => e.id === botonEliminar.dataset.deleteEvent);
+    if (!evento) return;
+    if (!confirm(`¿Seguro que quieres eliminar el evento "${evento.titulo || "Sin título"}"?`)) return;
+    try {
+      await deleteDoc(doc(db, "eventos", evento.id));
+      eventAdminMessage.textContent = "Evento eliminado correctamente.";
+      await cargarEventosAdmin();
+      await cargarEventosPublicos();
+    } catch (error) {
+      console.error(error);
+      eventAdminMessage.textContent = "No se ha podido eliminar el evento.";
+    }
+  }
+});
+
+ponerValor("eventDate", fechaHoy());
+
 /* COMPROBACIÓN DEL ACCESO */
 
 onAuthStateChanged(auth,async user => {
@@ -1092,6 +1595,10 @@ onAuthStateChanged(auth,async user => {
       await cargarSocios();
       await cargarPagos();
       await cargarUsuarios();
+      limpiarFormularioNoticias();
+      await cargarNoticiasAdmin();
+      limpiarFormularioEventos();
+      await cargarEventosAdmin();
     }
 
   } catch (error) {
@@ -1101,6 +1608,8 @@ onAuthStateChanged(auth,async user => {
   }
 });
 
+cargarNoticiasPublicas();
+cargarEventosPublicos();
 console.log("Firebase conectado correctamente");
 </script>
 </body>
