@@ -14,10 +14,29 @@ header{background:#5b1022;color:white;padding:22px 7%;display:flex;justify-conte
 .brand{font-size:19px;font-weight:bold}
 nav{display:flex;gap:20px;flex-wrap:wrap}
 nav a{color:white;text-decoration:none;font-size:14px}
-.hero{min-height:440px;padding:90px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,#350914,#781c32);color:white}
-.ornament{color:#d9b66d;font-size:35px}
-.hero h1{font-size:clamp(34px,6vw,58px);margin:15px 0}
-.hero p{max-width:650px;font-size:18px}
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:500px;padding:100px 20px 92px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:radial-gradient(ellipse at 50% 0%,#8b3048 0%,transparent 48%),linear-gradient(135deg,#26060f 0%,#5b1022 55%,#781c32 100%);color:white}
+.hero:before,.hero:after{content:"✦";position:absolute;z-index:-1;color:#d9b66d22;font-size:250px;line-height:1}
+.hero:before{left:4%;top:4%;transform:rotate(-15deg)}
+.hero:after{right:4%;bottom:-12%;transform:rotate(15deg)}
+.hero-kicker{display:inline-block;padding:7px 15px;border:1px solid #d9b66d88;border-radius:30px;color:#f0d79f;font-size:12px;letter-spacing:3px;text-transform:uppercase}
+.ornament{color:#d9b66d;font-size:35px;margin:17px 0 4px}
+.hero h1{font-size:clamp(36px,6vw,64px);line-height:1.12;margin:12px 0 20px;text-shadow:0 3px 18px #0005}
+.hero p{max-width:680px;font-size:clamp(17px,2vw,20px);color:#f5e9e5}
+.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.hero .button{margin-top:12px;min-width:175px}
+.hero .button.secondary-hero{background:transparent;border-color:#f3e4c3;color:#fff}
+.hero .button.secondary-hero:hover{background:#ffffff18}
+.home-intro{padding-top:68px;padding-bottom:58px;background:#fff}
+.home-intro h2{font-size:clamp(27px,4vw,36px)}
+.home-intro .intro-copy{max-width:760px;font-size:17px;color:#5e514d}
+.home-highlights{max-width:1050px;margin:34px auto 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;text-align:left}
+.home-highlight{padding:24px 22px;background:#faf7f3;border:1px solid #e8ddd2;border-top:3px solid #b08a3e;border-radius:8px}
+.home-highlight .highlight-mark{color:#a17a32;font-size:23px}
+.home-highlight h3{color:#5b1022;font-size:19px;margin:8px 0}
+.home-highlight p{font-size:14px;color:#75635d;margin:0}
+.home-highlight a{display:inline-block;margin-top:13px;color:#781c32;font-weight:bold;text-decoration:none;font-size:14px}
+.home-highlight a:hover{text-decoration:underline}
+@media(max-width:700px){.home-highlights{grid-template-columns:1fr}.hero{min-height:440px;padding:75px 18px}.hero:before{left:-25%;}.hero:after{right:-25%;}} 
 .button{display:inline-block;margin-top:22px;padding:12px 25px;border:1px solid #d9b66d;color:#fff;background:#5b1022;text-decoration:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:15px}
 .button:hover{background:#781c32}
 button:disabled{opacity:.5;cursor:not-allowed}
@@ -79,6 +98,8 @@ nav{justify-content:center}
 .form-grid,.stats{grid-template-columns:1fr}
 .form-grid .full{grid-column:auto}
 .panel{padding:18px}
+.hero-actions{width:100%;max-width:340px;flex-direction:column}
+.hero-actions .button{width:100%}
 }
 </style>
 </head>
@@ -98,16 +119,40 @@ nav{justify-content:center}
 
 <main>
 <section class="hero" id="inicio">
+  <span class="hero-kicker">Valmojado · Cultura y tradición</span>
   <div class="ornament">✦ ✦ ✦</div>
   <h1>Asociación Cultural Flamenca<br>Virgen del Rocío</h1>
-  <p>Tradición, cultura, flamenco y pasión por nuestras raíces.</p>
-  <a class="button" href="#asociacion">Descubre nuestra asociación</a>
+  <p>Un punto de encuentro para compartir nuestra pasión por el flamenco, la cultura y las tradiciones.</p>
+  <div class="hero-actions">
+    <a class="button" href="#calendario">Ver próximas actividades</a>
+    <a class="button secondary-hero" href="#asociacion">Conócenos</a>
+  </div>
 </section>
 
-<section id="asociacion">
-  <h2>Nuestra asociación</h2>
-  <p>Bienvenidos a la Asociación Cultural Flamenca Virgen del Rocío de Valmojado. Un espacio para compartir, disfrutar y mantener viva la cultura flamenca.</p>
-  <p class="gold" style="margin-top:20px">VALMOJADO</p>
+<section id="asociacion" class="home-intro">
+  <h2>Una asociación, una pasión</h2>
+  <p class="intro-copy">En la Asociación Cultural Flamenca Virgen del Rocío de Valmojado trabajamos para mantener viva la cultura flamenca y crear momentos para compartir, aprender y disfrutar juntos.</p>
+  <p class="gold" style="margin-top:18px;letter-spacing:3px;font-size:13px;font-weight:bold">VALMOJADO</p>
+  <div class="home-highlights">
+    <article class="home-highlight">
+      <div class="highlight-mark">✦</div>
+      <h3>Cultura y tradición</h3>
+      <p>Un espacio para celebrar y transmitir nuestra afición por el flamenco y nuestras raíces.</p>
+      <a href="#actividades">Descubrir más</a>
+    </article>
+    <article class="home-highlight">
+      <div class="highlight-mark">♫</div>
+      <h3>Actividades y encuentros</h3>
+      <p>Consulta las citas, actuaciones y encuentros organizados por la asociación.</p>
+      <a href="#calendario">Consultar calendario</a>
+    </article>
+    <article class="home-highlight">
+      <div class="highlight-mark">❖</div>
+      <h3>Noticias de la asociación</h3>
+      <p>Mantente al día con los avisos, novedades y comunicados.</p>
+      <a href="#noticias">Leer noticias</a>
+    </article>
+  </div>
 </section>
 
 <section id="actividades">
