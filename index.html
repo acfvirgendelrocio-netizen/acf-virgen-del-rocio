@@ -113,6 +113,7 @@ nav{justify-content:center}
     <a href="#actividades">Actividades</a>
     <a href="#calendario">Calendario</a>
     <a href="#noticias">Noticias</a>
+    <a href="#hazte-socio">Hazte socio</a>
     <a href="#socios">Socios</a>
   </nav>
 </header>
@@ -183,6 +184,33 @@ nav{justify-content:center}
     <p style="text-align:center">Cargando noticias...</p>
   </div>
   <p id="newsPublicMessage" class="message" role="status"></p>
+</section>
+
+<section id="hazte-socio" class="home-intro">
+  <h2>Hazte socio</h2>
+  <p class="intro-copy">¿Quieres formar parte de nuestra familia? Apoya la cultura flamenca y participa en las actividades y encuentros de la A.C.F. Virgen del Rocío.</p>
+  <div class="panel" style="max-width:850px">
+    <h3>Solicita tu inscripción</h3>
+    <p style="margin-bottom:12px">Rellena este formulario y la asociación se pondrá en contacto contigo para informarte de los siguientes pasos.</p>
+    <p class="gold" style="font-weight:bold;margin-bottom:16px">Cuota anual orientativa: entre 15 € y 20 € (pendiente de aprobación definitiva).</p>
+    <form id="membershipRequestForm">
+      <div class="form-grid">
+        <div><label for="requestName">Nombre *</label><input id="requestName" type="text" maxlength="80" autocomplete="given-name" required></div>
+        <div><label for="requestSurname">Apellidos *</label><input id="requestSurname" type="text" maxlength="120" autocomplete="family-name" required></div>
+        <div><label for="requestPhone">Teléfono *</label><input id="requestPhone" type="tel" maxlength="25" autocomplete="tel" required></div>
+        <div><label for="requestEmail">Correo electrónico *</label><input id="requestEmail" type="email" maxlength="160" autocomplete="email" required></div>
+        <div class="full"><label for="requestBirthdate">Fecha de nacimiento (opcional)</label><input id="requestBirthdate" type="date" autocomplete="bday"></div>
+        <div class="full"><label for="requestMessage">Mensaje u observaciones (opcional)</label><textarea id="requestMessage" rows="4" maxlength="1000" placeholder="Cuéntanos si tienes alguna consulta..."></textarea></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;align-items:flex-start;text-align:left">
+        <input id="requestConsent" type="checkbox" required style="width:auto;margin-top:5px">
+        <label for="requestConsent" style="margin:0;font-size:14px">He leído la información sobre el tratamiento de mis datos y autorizo a la asociación a utilizarlos para gestionar esta solicitud y contactar conmigo. *</label>
+      </div>
+      <p style="font-size:13px;text-align:left;margin-top:12px">Responsable: A.C.F. Virgen del Rocío. Contacto: <a href="mailto:acfvirgendelrocio@gmail.com">acfvirgendelrocio@gmail.com</a>. Los datos se utilizarán únicamente para atender esta solicitud y no se mostrarán públicamente. Puedes solicitar información, acceso, rectificación o supresión escribiendo al correo indicado. No envíes datos especialmente sensibles.</p>
+      <button class="button" type="submit" id="sendMembershipRequest">Enviar solicitud</button>
+    </form>
+    <p id="membershipRequestMessage" class="message" role="status" aria-live="polite"></p>
+  </div>
 </section>
 
 <section class="private" id="socios">
@@ -461,6 +489,18 @@ nav{justify-content:center}
       </div>
 
       <hr>
+      <!-- SOLICITUDES DE ALTA DE SOCIOS -->
+      <h3>Solicitudes para hacerse socio</h3>
+      <p style="text-align:center">Revisa las solicitudes recibidas y marca si han sido aceptadas o rechazadas. Aceptar una solicitud no crea automáticamente la ficha del socio.</p>
+      <p id="membershipAdminMessage" class="message" role="status"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Fecha</th><th>Nombre</th><th>Contacto</th><th>Mensaje</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="membershipRequestsTable"><tr><td colspan="6">Cargando solicitudes...</td></tr></tbody>
+        </table>
+      </div>
+
+      <hr>
       <!-- GESTIÓN DE NOTICIAS -->
       <h3>Gestión de noticias y actualidad</h3>
       <p style="text-align:center">Crea noticias, edítalas, publícalas o guárdalas como borrador.</p>
@@ -710,6 +750,123 @@ function valor(id) {
 function ponerValor(id, dato) {
   document.getElementById(id).value = dato ?? "";
 }
+
+/* SOLICITUDES PÚBLICAS PARA HACERSE SOCIO */
+const membershipRequestForm = document.getElementById("membershipRequestForm");
+const membershipRequestMessage = document.getElementById("membershipRequestMessage");
+const sendMembershipRequest = document.getElementById("sendMembershipRequest");
+
+membershipRequestForm.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!document.getElementById("requestConsent").checked) {
+    membershipRequestMessage.textContent = "Debes aceptar la información de privacidad para enviar la solicitud.";
+    return;
+  }
+  const datos = {
+    nombre: document.getElementById("requestName").value.trim(),
+    apellidos: document.getElementById("requestSurname").value.trim(),
+    telefono: document.getElementById("requestPhone").value.trim(),
+    email: document.getElementById("requestEmail").value.trim().toLowerCase(),
+    fechaNacimiento: document.getElementById("requestBirthdate").value,
+    mensaje: document.getElementById("requestMessage").value.trim(),
+    consentimiento: true,
+    estado: "pendiente",
+    fechaSolicitud: new Date().toISOString()
+  };
+  if (!datos.nombre || !datos.apellidos || !datos.telefono || !datos.email) {
+    membershipRequestMessage.textContent = "Completa todos los campos obligatorios.";
+    return;
+  }
+  sendMembershipRequest.disabled = true;
+  membershipRequestMessage.textContent = "Enviando solicitud...";
+  try {
+    await addDoc(collection(db, "solicitudesSocios"), datos);
+    membershipRequestForm.reset();
+    membershipRequestMessage.textContent = "¡Solicitud enviada! La asociación se pondrá en contacto contigo.";
+  } catch (error) {
+    console.error("Error enviando solicitud de socio:", error);
+    membershipRequestMessage.textContent = "No se ha podido enviar la solicitud. Inténtalo de nuevo más tarde o escribe a acfvirgendelrocio@gmail.com.";
+  } finally {
+    sendMembershipRequest.disabled = false;
+  }
+});
+
+/* GESTIÓN ADMINISTRATIVA DE SOLICITUDES DE SOCIOS */
+const membershipRequestsTable = document.getElementById("membershipRequestsTable");
+const membershipAdminMessage = document.getElementById("membershipAdminMessage");
+let membershipRequestsCache = [];
+
+async function cargarSolicitudesSociosAdmin() {
+  if (!esAdministrador) return;
+  membershipRequestsTable.innerHTML = '<tr><td colspan="6">Cargando solicitudes...</td></tr>';
+  try {
+    const resultado = await getDocs(collection(db, "solicitudesSocios"));
+    membershipRequestsCache = resultado.docs.map(documento => ({id:documento.id, ...documento.data()}));
+    membershipRequestsCache.sort((a,b) => String(b.fechaSolicitud || "").localeCompare(String(a.fechaSolicitud || "")));
+    mostrarSolicitudesSociosAdmin();
+  } catch (error) {
+    console.error("Error cargando solicitudes de socios:", error);
+    membershipRequestsTable.innerHTML = '<tr><td colspan="6">No se han podido cargar las solicitudes. Comprueba las reglas de Firestore.</td></tr>';
+  }
+}
+
+function mostrarSolicitudesSociosAdmin() {
+  membershipRequestsTable.innerHTML = "";
+  if (!membershipRequestsCache.length) {
+    membershipRequestsTable.innerHTML = '<tr><td colspan="6">Todavía no hay solicitudes.</td></tr>';
+    return;
+  }
+  membershipRequestsCache.forEach(solicitud => {
+    const fila = document.createElement("tr");
+    const fecha = solicitud.fechaSolicitud ? new Date(solicitud.fechaSolicitud).toLocaleString("es-ES") : "";
+    const estado = solicitud.estado || "pendiente";
+    fila.innerHTML = `
+      <td>${escapar(fecha)}</td>
+      <td>${escapar((solicitud.nombre || "") + " " + (solicitud.apellidos || ""))}<br><small>Nacimiento: ${escapar(solicitud.fechaNacimiento || "No indicado")}</small></td>
+      <td>${escapar(solicitud.telefono || "")}<br><a href="mailto:${encodeURIComponent(solicitud.email || "")}">${escapar(solicitud.email || "")}</a></td>
+      <td>${escapar(solicitud.mensaje || "—")}</td>
+      <td><span class="badge ${estado === "aceptada" ? "admin" : (estado === "rechazada" ? "inactive" : "")}">${escapar(estado.charAt(0).toUpperCase() + estado.slice(1))}</span></td>
+      <td>
+        <button type="button" data-membership-status="aceptada" data-membership-id="${escapar(solicitud.id)}">Aceptar</button>
+        <button type="button" class="secondary" data-membership-status="rechazada" data-membership-id="${escapar(solicitud.id)}">Rechazar</button>
+        <button type="button" class="delete" data-membership-delete="${escapar(solicitud.id)}">Eliminar</button>
+      </td>`;
+    membershipRequestsTable.appendChild(fila);
+  });
+}
+
+membershipRequestsTable.addEventListener("click", async event => {
+  const botonEstado = event.target.closest("[data-membership-status]");
+  const botonEliminar = event.target.closest("[data-membership-delete]");
+  if (botonEstado) {
+    const id = botonEstado.dataset.membershipId;
+    const estado = botonEstado.dataset.membershipStatus;
+    try {
+      await updateDoc(doc(db, "solicitudesSocios", id), {
+        estado,
+        revisadoPor: auth.currentUser.uid,
+        revisadoEn: new Date().toISOString()
+      });
+      membershipAdminMessage.textContent = "Solicitud marcada como " + estado + ". Recuerda contactar con la persona para completar el alta.";
+      await cargarSolicitudesSociosAdmin();
+    } catch (error) {
+      console.error(error);
+      membershipAdminMessage.textContent = "No se ha podido actualizar la solicitud. Comprueba las reglas de Firestore.";
+    }
+  }
+  if (botonEliminar) {
+    const id = botonEliminar.dataset.membershipDelete;
+    if (!confirm("¿Seguro que quieres eliminar esta solicitud? Esta acción no se puede deshacer.")) return;
+    try {
+      await deleteDoc(doc(db, "solicitudesSocios", id));
+      membershipAdminMessage.textContent = "Solicitud eliminada.";
+      await cargarSolicitudesSociosAdmin();
+    } catch (error) {
+      console.error(error);
+      membershipAdminMessage.textContent = "No se ha podido eliminar la solicitud.";
+    }
+  }
+});
 
 function escapar(texto) {
   return String(texto ?? "").replace(/[&<>"']/g, letra => ({
@@ -1669,6 +1826,7 @@ onAuthStateChanged(auth,async user => {
       await cargarNoticiasAdmin();
       limpiarFormularioEventos();
       await cargarEventosAdmin();
+      await cargarSolicitudesSociosAdmin();
     }
 
   } catch (error) {
