@@ -109,6 +109,13 @@ nav{justify-content:center}
 .faq-list summary:after{content:"+";position:absolute;right:4px;top:0;color:#9a7434;font-size:22px;font-weight:400}
 .faq-list details[open] summary:after{content:"−"}
 .faq-list details p{margin:12px 0 2px;line-height:1.7;color:#514744}
+
+.board-section{background:#faf7f3}
+.board-grid{max-width:1000px;margin:30px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;text-align:center}
+.board-card{padding:24px 18px;background:#fff;border:1px solid #e8ddd2;border-top:3px solid #b08a3e;border-radius:8px;box-shadow:0 4px 14px #00000008}
+.board-role{display:block;color:#a17a32;font-size:12px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:9px}
+.board-card h3{color:#5b1022;font-size:19px;line-height:1.35}
+.board-note{margin:24px auto 0!important;color:#75635d;font-size:13px;font-style:italic}
 </style>
 </head>
 
@@ -118,6 +125,7 @@ nav{justify-content:center}
   <nav>
     <a href="#inicio">Inicio</a>
     <a href="#asociacion">La asociación</a>
+    <a href="#junta-directiva">Junta directiva</a>
     <a href="#actividades">Actividades</a>
     <a href="#calendario">Calendario</a>
     <a href="#noticias">Noticias</a>
@@ -164,6 +172,20 @@ nav{justify-content:center}
       <a href="#noticias">Leer noticias</a>
     </article>
   </div>
+</section>
+
+
+<section id="junta-directiva" class="home-intro board-section">
+  <h2>Junta directiva propuesta</h2>
+  <p class="intro-copy">Estas son las personas que forman parte de la propuesta de junta directiva de la A.C.F. Virgen del Rocío de Valmojado.</p>
+  <div class="board-grid">
+    <article class="board-card"><span class="board-role">Presidenta</span><h3>María Moreno Morillo</h3></article>
+    <article class="board-card"><span class="board-role">Secretaria</span><h3>Bárbara Lendinez</h3></article>
+    <article class="board-card"><span class="board-role">Tesorero</span><h3>Ángel Merino Muñoz-Camacho</h3></article>
+    <article class="board-card"><span class="board-role">1.er vocal</span><h3>Jordi Moreno Morillo</h3></article>
+    <article class="board-card"><span class="board-role">2.º vocal</span><h3>Iván Moreno Morillo</h3></article>
+  </div>
+  <p class="board-note">Composición propuesta, pendiente de aprobación oficial.</p>
 </section>
 
 <section id="actividades">
